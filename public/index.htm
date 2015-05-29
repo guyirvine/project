@@ -1,0 +1,82 @@
+<html>
+
+	<head>
+		<link rel="stylesheet" type="text/css" href="css/main.css" media="screen" />
+	</head>
+	<body>
+		<div class='body'>
+		<header>
+			<h1 data-bind='text: page_name'></h1>
+		</header>
+
+		<section class='hypothesis'>
+			<table>
+				<thead>
+					<tr>
+						<th>feature</th>
+						<th>persona</th>
+						<th>outcome</th>
+					</tr>
+				</thead>
+				<tbody data-bind='foreach: hypothesis_list'>
+					<tr data-bind='click: click'>
+						<td class='description' data-bind='text: description'></td>
+						<td class='persona' data-bind='text: persona().name'></td>
+						<td class='outcome' data-bind='text: outcome().name'></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan='2'></td>
+						<td class='action'>
+							<button class='action close' data-bind='click: addnew'>Add new</button>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</section>
+
+		<footer>
+		</footer>
+
+	</div>
+
+		<div class='form hypothesis hide'>
+			<h2>hypothesis</h2>
+			<ul>
+				<li>
+					<textarea data-bind="value: description"></textarea>
+				</li>
+				<li>
+					<label>Persona: </label>
+					<label data-bind='text: persona().name'></label>
+				</li>
+				<li>
+					<label>Outcome</label>
+					<label data-bind='text: outcome().name'></label>
+				</li>
+			</ul>
+
+			<button class='action close' data-bind='click: close'>Close</button>
+		</div>
+
+		<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	  <script src="bower_components/knockout/dist/knockout.js"></script>
+	  <script src="bower_components/underscore/underscore-min.js"></script>
+		<script src="js/model.js"></script>
+
+		<script>
+			var vm = new HypothesisViewModel();
+			ko.applyBindings(vm, $('div.body')[0]);
+
+			vm.get_for_project(1);
+
+			$(document).keyup(function(e){
+
+			    if(e.keyCode === 27)
+			        vm.close_form();
+
+			});
+		</script>
+	</body>
+</html>

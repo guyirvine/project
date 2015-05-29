@@ -1,0 +1,103 @@
+body, textarea {
+        font-family: HelveticaNeue-Light, 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 18px;
+        font-weight: 300;
+        line-height: 28px;
+}
+
+th {
+  text-transform: capitalize;
+  text-align: left;
+}
+
+th, td {
+  padding: 12px 9px;
+}
+
+section.hypothesis tbody td {
+  border: 1px solid black;
+}
+
+section.hypothesis thead th {
+  background-color: lightgrey;
+  border: 1px solid black;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+section.hypothesis td.description {
+  width: 60%;
+}
+section.hypothesis td.persona {
+  width: 20%;
+}
+section.hypothesis td.outcome {
+  width: 20%;
+}
+section.hypothesis tbody tr:hover {
+  background-color: lightgrey;
+  cursor: pointer;
+}
+
+section.hypothesis tfoot td.action {
+  text-align: center;
+}
+
+
+
+.hide {
+  display: none;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+div.body {
+  height: 100%;
+  padding: 0.5em 1em;
+}
+
+body.showForm div.body, body.showForm header, body.showForm section, body.showForm footer {
+  background-color: grey;
+  opacity: 0.6;
+}
+
+div.form {
+  position: absolute;
+  top: 3em;
+  left: 5em;
+  right: 5em;
+  border: 1px solid black;
+  background-color: white;
+  padding: 1em 2em;
+  padding-bottom: 2em;
+}
+
+div.form h2 {
+  text-transform: capitalize;
+}
+
+div.form ul {
+  padding-left: 0em;
+}
+
+div.form li {
+  list-style: none;
+}
+
+div.form li textarea {
+  width: 80%;
+}
+
+button.action {
+  padding: 6px 9px;
+}
+
+div.form button.action {
+  position: absolute;
+  right: 1em;
+}
