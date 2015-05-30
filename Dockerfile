@@ -2,7 +2,7 @@ FROM ubuntu:14.04
 
 MAINTAINER Guy Irvine <guy@guyirvine.com>
 
-echo "Install packages" \
+RUN echo "Install packages" \
   && export DEBIAN_FRONTEND=noninteractive \
   && apt-get -y update \
   && apt-get install -y \
