@@ -4,7 +4,9 @@ require 'FluidDb'
 require 'diplomat'
 
 before do
-  @db = FluidDb::Db(Diplomat.get( 'project-db' ))
+  faraday = Faraday.new(:url => 'http://consul.service.consul:8500', :proxy => '')
+  kv = Diplomat::Kv.new(faraday)
+  @db = FluidDb::Db(kv.get('project-db'))
 end
 
 after do
