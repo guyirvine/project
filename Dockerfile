@@ -11,22 +11,22 @@ RUN echo "Install packages" \
       nodejs \
       npm \
       git-core \
-      libpq-dev \
+      libpq-dev
 
-  && echo "Setup locales" \
+RUN echo "Setup locales" \
   && localedef -c -i en_NZ -f UTF-8 en_NZ.UTF-8 \
-  && update-locale LANG=en_NZ.UTF-8 \
+  && update-locale LANG=en_NZ.UTF-8
 
-  && echo "Create user" \
+RUN echo "Create user" \
   && mkdir -p /opt/project/ \
   && groupadd --gid 1000 puser \
   && useradd -m --home /home/puser --uid 1000 --gid puser --shell /bin/sh puser \
 
-  && echo "Install required" \
+RUN echo "Install required" \
   && gem install bundler \
-  && npm install -g bower \
+  && npm install -g bower
 
-  && echo "Cleaning up" \
+RUN echo "Cleaning up" \
   && apt-get autoremove -y \
   && apt-get clean -y \
   && rm -rf /var/lib/apt/lists/*
