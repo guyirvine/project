@@ -1,9 +1,10 @@
 require 'sinatra'
 require 'json'
 require 'FluidDb'
+require 'diplomat'
 
 before do
-  @db = FluidDb::Db(ENV['DB'])
+  @db = FluidDb::Db(Diplomat.get( 'project-db' ))
 end
 
 after do

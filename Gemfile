@@ -5,4 +5,4 @@ gem 'rerun'
 gem 'fluiddb'
 gem 'json'
 gem 'pg'
-
+gem 'diplomat'
