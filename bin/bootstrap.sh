@@ -8,6 +8,8 @@ echo 'nameserver 10.0.2.15' > /etc/resolv.conf
 echo 'nameserver 10.0.2.3' >> /etc/resolv.conf
 echo 'search service.consul' >> /etc/resolv.conf
 
+echo '10.0.2.15 consul.service.consul' >> /etc/hosts
+
 cd /vagrant
 
 bundle install

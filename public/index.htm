@@ -3,8 +3,36 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="css/main.css" media="screen" />
 	</head>
+	<style>
+
+div.pane {
+	display: inline-block;
+	vertical-align: top;
+}
+
+div.left {
+	width: 8em;
+	padding: 0.5em 1em;
+}
+
+div.body h1 {
+	margin-top: 0;
+}
+
+div.left li {
+	white-space: nowrap;
+}
+
+	</style>
 	<body>
-		<div class='body'>
+
+		<div class='left pane'>
+			<ul data-bind='foreach: project_list'>
+				<li data-bind='text: name'>Project</li>
+			</ul>
+		</div>
+
+		<div class='body pane'>
 		<header>
 			<h1 data-bind='text: page_name'>Project</h1>
 		</header>
@@ -63,12 +91,12 @@
 		<script src="bower_components/jquery/dist/jquery.min.js"></script>
 	  <script src="bower_components/knockout/dist/knockout.js"></script>
 	  <script src="bower_components/underscore/underscore-min.js"></script>
-		<script src="js/model.js"></script>
+		<script src="js/index.js"></script>
 
 		<script>
 			var vm = new HypothesisViewModel();
 			ko.applyBindings(vm, $('div.body')[0]);
-
+			ko.applyBindings(vm, $('div.left')[0]);
 			vm.get_for_project(1);
 
 			$(document).keyup(function(e){

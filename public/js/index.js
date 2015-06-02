@@ -1,7 +1,8 @@
 
-function Project(n) {
+function Project(id, n) {
   var self=this;
 
+  self.id=id;
   self.name=ko.observable(n);
 }
 
@@ -40,9 +41,14 @@ function Hypothesis(o, p, d) {
 function HypothesisViewModel() {
   var self=this;
 
-  self.project_name = ko.observable( 'Jimbo' );
+  self.project_list = ko.observableArray();
+  self.project_idx = {};
+
+  self.current_project = ko.observable();
   self.page_name = ko.computed( function() {
-    return self.project_name();
+    if ( self.current_project() === undefined ) { return ""; }
+
+    return self.current_project().name();
   });
 
   self.outcome_list = ko.observableArray();
@@ -64,6 +70,10 @@ function HypothesisViewModel() {
     self.list.push( new Hypothesis(o_id, o, d) );
   };
 
+  self.add_project=function(p) {
+    self.project_list.push(p);
+    self.project_idx[p.id]=p;
+  };
   self.add_outcome=function(o) {
     self.outcome_list.push(o);
     self.outcome_idx[o.id]=o;
@@ -89,10 +99,12 @@ function HypothesisViewModel() {
 
   self.get_for_project = function(id) {
     $.when(
-      $.get('/project/' + id),
       $.get('/project/' + id + '/outcome'),
-      $.get('/project/' + id + '/persona')
-    ).done(function( project_data, outcome_data, persona_data ) {
+      $.get('/project/' + id + '/persona'),
+      $.get('/project/' + id + '/hypothesis')
+    ).done(function( outcome_data, persona_data, hypothesis_data ) {
+      self.current_project( self.project_idx[id] );
+
       _.each(JSON.parse( outcome_data[0] ), function(el) {
         self.add_outcome( new Outcome( el.id, el.name ) );
       });
@@ -101,15 +113,37 @@ function HypothesisViewModel() {
         self.add_persona(new Persona( el.id, el.name ));
       });
 
-      $.get( '/project/' + id + '/hypothesis', function(data) {
-        var list = JSON.parse( data );
-        _.each( list, function(el) {
-          var o=self.outcome_idx[el.outcome_id];
-          var p=self.persona_idx[el.persona_id];
+      _.each( JSON.parse( hypothesis_data[0] ), function(el) {
+        var o=self.outcome_idx[el.outcome_id];
+        var p=self.persona_idx[el.persona_id];
 
-          self.add_hypothesis(new Hypothesis(o, p, el.description));
-        });
+        self.add_hypothesis(new Hypothesis(o, p, el.description));
       });
     });
   };
+
+  $.get('/project', function(project_list_data) {
+    _.each(JSON.parse( project_list_data ), function(el) {
+      self.add_project( new Project( el.id, el.name ) );
+    });
+  });
+}
+
+
+function ProjectListViewModel() {
+  var self=this;
+
+  self.project_list = ko.observableArray();
+  self.project_idx = {};
+
+  self.add_project=function(p) {
+    self.project_list.push(p);
+    self.project_idx[p.id]=p;
+  };
+
+  $.get('/project', function(data) {
+    _.each(JSON.parse( data ), function(el) {
+      self.add_project( new Project( el.id, el.name ) );
+    });
+  });
 }

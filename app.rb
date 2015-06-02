@@ -17,6 +17,11 @@ get '/' do
   send_file settings.public_folder + '/index.htm'
 end
 
+get '/project' do
+  sql = 'SELECT id, name FROM project_tbl'
+  @db.queryForResultset(sql, []).to_json
+end
+
 get '/project/:id' do
   sql = 'SELECT id, name FROM project_tbl WHERE id = ?'
   @db.queryForArray(sql, [params[:id]]).to_json
