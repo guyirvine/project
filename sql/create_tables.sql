@@ -36,3 +36,13 @@ CREATE TABLE hypothesis_tbl (
   CONSTRAINT hypothesis_persona_fk FOREIGN KEY ( persona_id ) REFERENCES persona_tbl(id),
   CONSTRAINT hypothesis_outcome_fk FOREIGN KEY ( outcome_id ) REFERENCES outcome_tbl(id)
 );
+
+CREATE SEQUENCE backlog_seq;
+
+CREATE TABLE backlog_tbl (
+  id BIGINT NOT NULL DEFAULT NEXTVAL( 'backlog_seq' ) PRIMARY KEY,
+  project_id BIGINT NOT NULL,
+  name VARCHAR NOT NULL,
+  description VARCHAR,
+  CONSTRAINT backlog_project_fk FOREIGN KEY ( project_id ) REFERENCES project_tbl(id)
+);

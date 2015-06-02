@@ -50,14 +50,13 @@ nav a {
 }
 
 .body header nav {
-	background-color: lightgrey;
-	border: 1px solid lightgrey;
+	border-bottom: 1px solid lightgrey;
 }
 .body header nav a {
 	display: inline-block;
 }
 .body header nav a.selected {
-	background-color: white;
+	border-bottom: 1px solid black;
 }
 
 div.body {
@@ -76,16 +75,15 @@ div.body {
 			<nav data-bind='foreach: project_list'>
 				<a data-bind='css: { selected: selected }, text: name, click: select_project'>Project</a>
 			</nav>
-
 		</div>
 
 		<div class='body pane'>
 		<header>
 			<nav>
-				<a name='persona'>Persona</a>
-				<a name='outcome'>Outcome</a>
-				<a name='hypothesis' class='selected'>Hypothesis</a>
-				<a name='backlog'>Backlog</a>
+				<a name='persona' class='persona'>Persona</a>
+				<a name='outcome' class='outcome'>Outcome</a>
+				<a name='hypothesis' class='hypothesis'>Hypothesis</a>
+				<a name='backlog' class='backlog'>Backlog</a>
 			</nav>
 		</header>
 
@@ -101,7 +99,13 @@ div.body {
 			</ul>
 		</section>
 
-		<section class='hypothesis'>
+		<section class='backlog hide'>
+			<ul data-bind='foreach: backlog_list'>
+				<li data-bind='text: name, click: select_backlog'>Backlog</a>
+			</ul>
+		</section>
+
+		<section class='hypothesis hide'>
 			<table>
 				<thead>
 					<tr>
@@ -166,23 +170,14 @@ div.body {
 			var vm = new HypothesisViewModel();
 			ko.applyBindings(vm, $('div.body')[0]);
 			ko.applyBindings(vm, $('div.left')[0]);
-			vm.get_for_project(1);
 
-			$(document).keyup(function(e){
-
-			    if(e.keyCode === 27)
-			        vm.close_form();
-
-			});
+			window.onpopstate = function(event) {
+		    vm.popstate( event.state );
+		  };
 
 			$( "header nav a" ).click( function(e) {
-				$( ".body section" ).addClass( "hide" );
-				$( "header nav a" ).removeClass( "selected " );
-				$( e.currentTarget ).addClass( "selected" );
-				$( "section." + e.currentTarget.name ).removeClass( "hide" );
+				vm.show( e.currentTarget.name );
 			});
-
-
 
 		</script>
 	</body>

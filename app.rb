@@ -37,6 +37,16 @@ get '/outcome/:id' do
   @db.queryForArray(sql, [params[:id]]).to_json
 end
 
+get '/project/:id/backlog' do
+  sql = 'SELECT id, name, description FROM backlog_tbl WHERE project_id = ?'
+  @db.queryForResultset(sql, [params[:id]]).to_json
+end
+
+get '/backlog/:id' do
+  sql = 'SELECT id, name, description FROM backlog_tbl WHERE id = ?'
+  @db.queryForArray(sql, [params[:id]]).to_json
+end
+
 get '/project/:id/persona' do
   sql = 'SELECT id, name, role FROM persona_tbl WHERE project_id = ?'
   @db.queryForResultset(sql, [params[:id]]).to_json

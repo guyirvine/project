@@ -5,6 +5,10 @@ body, textarea {
         line-height: 28px;
 }
 
+table {
+  font-size: 0.8em;
+}
+
 th {
   text-transform: capitalize;
   text-align: left;
