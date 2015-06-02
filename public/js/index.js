@@ -4,6 +4,11 @@ function Project(id, n) {
 
   self.id=id;
   self.name=ko.observable(n);
+  self.selected=ko.observable(false);
+
+  self.select_project = function() {
+    vm.get_for_project( self.id );
+  };
 }
 
 function Outcome(id, n) {
@@ -11,6 +16,10 @@ function Outcome(id, n) {
 
   self.id = id;
   self.name=ko.observable(n);
+
+  self.select_outcome = function() {
+    console.log( "select_outcome" );
+  };
 }
 
 function Persona(id, n) {
@@ -18,6 +27,10 @@ function Persona(id, n) {
 
   self.id = id;
   self.name=ko.observable(n);
+
+  self.select_persona = function() {
+    console.log( "select_persona" );
+  };
 }
 
 function Hypothesis(o, p, d) {
@@ -28,13 +41,21 @@ function Hypothesis(o, p, d) {
   self.description=ko.observable(d);
 
   self.click = function(e) {
-    vm.show_form('hypothesis');
-    $( 'div.hypothesis textarea' ).focus();
+//    vm.show_form('hypothesis');
+//    $( 'div.hypothesis textarea' ).focus();
+//    ko.applyBindings(self, $('div.form')[0]);
 
-    ko.applyBindings(self, $('div.form')[0]);
+    $( "section" ).addClass( "hide" );
+    $( "section.form" ).html( $( "div.hypothesis-form" ).html() );
+    $( "section.form" ).removeClass( "hide" );
+
+    $( 'section.form textarea' ).focus();
+    ko.applyBindings(self, $('section.form')[0]);
   };
   self.close = function(e) {
-    vm.close_form();
+    $( "section" ).addClass( "hide" );
+    ko.cleanNode($('section.form')[0]);
+    $( "section.hypothesis" ).removeClass( "hide" );
   };
 }
 
@@ -98,21 +119,28 @@ function HypothesisViewModel() {
   };
 
   self.get_for_project = function(id) {
+    if ( vm.current_project() !== undefined ) {
+      vm.current_project().selected( false );
+    }
     $.when(
       $.get('/project/' + id + '/outcome'),
       $.get('/project/' + id + '/persona'),
       $.get('/project/' + id + '/hypothesis')
     ).done(function( outcome_data, persona_data, hypothesis_data ) {
       self.current_project( self.project_idx[id] );
+      vm.current_project().selected( true );
 
+      self.outcome_list.removeAll();
       _.each(JSON.parse( outcome_data[0] ), function(el) {
         self.add_outcome( new Outcome( el.id, el.name ) );
       });
 
+      self.persona_list.removeAll();
       _.each(JSON.parse( persona_data[0] ), function(el) {
         self.add_persona(new Persona( el.id, el.name ));
       });
 
+      self.hypothesis_list.removeAll();
       _.each( JSON.parse( hypothesis_data[0] ), function(el) {
         var o=self.outcome_idx[el.outcome_id];
         var p=self.persona_idx[el.persona_id];

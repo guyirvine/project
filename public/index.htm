@@ -12,7 +12,6 @@ div.pane {
 
 div.left {
 	width: 8em;
-	padding: 0.5em 1em;
 }
 
 div.body h1 {
@@ -20,22 +19,87 @@ div.body h1 {
 }
 
 div.left li {
-	white-space: nowrap;
+	font-size: 0.8em;
+}
+
+nav a:hover {
+	text-decoration: underline;
+}
+
+.side-menu {
+	background-color: lightgrey;
+	height: 100%;
+}
+
+.side-menu h2 {
+	font-size: 0.8em;
+}
+
+nav a {
+	cursor: pointer;
+	padding: 0.5em 1em;
+	font-size: 0.8em;
+}
+
+.side-menu a {
+	font-weight: bold;
+	display: block;
+}
+.side-menu a.selected {
+	background-color: white;
+}
+
+.body header nav {
+	background-color: lightgrey;
+	border: 1px solid lightgrey;
+}
+.body header nav a {
+	display: inline-block;
+}
+.body header nav a.selected {
+	background-color: white;
+}
+
+div.body {
+	padding: 0;
+}
+
+.body section {
+	padding: 0.5em 1em;
 }
 
 	</style>
 	<body>
 
-		<div class='left pane'>
-			<ul data-bind='foreach: project_list'>
-				<li data-bind='text: name'>Project</li>
-			</ul>
+		<div class='left pane side-menu'>
+			<h2>Project List</h2>
+			<nav data-bind='foreach: project_list'>
+				<a data-bind='css: { selected: selected }, text: name, click: select_project'>Project</a>
+			</nav>
+
 		</div>
 
 		<div class='body pane'>
 		<header>
-			<h1 data-bind='text: page_name'>Project</h1>
+			<nav>
+				<a name='persona'>Persona</a>
+				<a name='outcome'>Outcome</a>
+				<a name='hypothesis' class='selected'>Hypothesis</a>
+				<a name='backlog'>Backlog</a>
+			</nav>
 		</header>
+
+		<section class='persona hide'>
+			<ul data-bind='foreach: persona_list'>
+				<li data-bind='text: name, click: select_persona'>Persona</a>
+			</ul>
+		</section>
+
+		<section class='outcome hide'>
+			<ul data-bind='foreach: outcome_list'>
+				<li data-bind='text: name, click: select_outcome'>Outcome</a>
+			</ul>
+		</section>
 
 		<section class='hypothesis'>
 			<table>
@@ -64,12 +128,17 @@ div.left li {
 			</table>
 		</section>
 
+		<section class='form hide'>
+
+		</section>
+
+
 		<footer>
 		</footer>
 
 	</div>
 
-		<div class='form hypothesis hide'>
+		<div class='form hypothesis hypothesis-form hide'>
 			<h2>hypothesis</h2>
 			<ul>
 				<li>
@@ -105,6 +174,16 @@ div.left li {
 			        vm.close_form();
 
 			});
+
+			$( "header nav a" ).click( function(e) {
+				$( ".body section" ).addClass( "hide" );
+				$( "header nav a" ).removeClass( "selected " );
+				$( e.currentTarget ).addClass( "selected" );
+				$( "section." + e.currentTarget.name ).removeClass( "hide" );
+			});
+
+
+
 		</script>
 	</body>
 </html>
