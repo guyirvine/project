@@ -13,3 +13,5 @@ echo '10.0.2.15 consul.service.consul' >> /etc/hosts
 cd /vagrant
 
 bundle install
+
+su -c 'rake rdb' jenkins
