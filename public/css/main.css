@@ -5,6 +5,10 @@ body, textarea {
         line-height: 28px;
 }
 
+select, input {
+  font-size: 1em;
+}
+
 table {
   font-size: 0.8em;
 }
@@ -61,8 +65,10 @@ body {
 }
 
 div.body {
-  height: 100%;
   padding: 0.5em 1em;
+  position: absolute;
+  left: 9em;
+  right: 3em;
 }
 
 body.showForm div.body, body.showForm header, body.showForm section, body.showForm footer {
@@ -70,38 +76,47 @@ body.showForm div.body, body.showForm header, body.showForm section, body.showFo
   opacity: 0.6;
 }
 
-div.form {
-  position: absolute;
-  top: 3em;
-  left: 5em;
-  right: 5em;
-  border: 1px solid black;
+section.form {
   background-color: white;
   padding: 1em 2em;
   padding-bottom: 2em;
 }
 
-div.form h2 {
+section.form h2 {
   text-transform: capitalize;
 }
 
-div.form ul {
+section.form ul {
   padding-left: 0em;
 }
 
-div.form li {
+section.form li {
   list-style: none;
+  padding-bottom: 1em;
 }
 
-div.form li textarea {
+section.form li label {
+  display: inline-block;
+  width: 5em;
+  text-align: right;
+  padding-right: 0.5em;
+}
+
+section.form li textarea {
   width: 80%;
 }
 
-button.action {
-  padding: 6px 9px;
+section.form div.form-footer {
+  border-top: 1px solid lightgrey;
+  text-align: right;
 }
 
-div.form button.action {
-  position: absolute;
-  right: 1em;
+section.hypothesis-form li.description label {
+  vertical-align: top;
+}
+
+button.action {
+  margin-top: 0.2em;
+  margin-right: 0.2em;
+  padding: 6px 9px;
 }

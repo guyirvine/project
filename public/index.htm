@@ -33,6 +33,7 @@ nav a:hover {
 
 .side-menu h2 {
 	font-size: 0.8em;
+	padding-left: 1em;
 }
 
 nav a {
@@ -67,6 +68,26 @@ div.body {
 	padding: 0.5em 1em;
 }
 
+section ul.top-level-list {
+	padding-left: 1em;
+	margin-bottom: 0;
+}
+
+section ul.top-level-list li {
+	cursor: pointer;
+}
+
+a.action {
+	font-weight: bold;
+	font-size: 0.8em;
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+a.action:hover {
+	text-decoration: underline;
+}
+
 	</style>
 	<body>
 
@@ -88,21 +109,24 @@ div.body {
 		</header>
 
 		<section class='persona hide'>
-			<ul data-bind='foreach: persona_list'>
-				<li data-bind='text: name, click: select_persona'>Persona</a>
+			<ul class='top-level-list' data-bind='foreach: persona_list'>
+				<li><a data-bind='text: name, click: select_persona'>Persona</a></li>
 			</ul>
+			<a class='action' data-bind='click: new_persona'>+1 More</a>
 		</section>
 
 		<section class='outcome hide'>
-			<ul data-bind='foreach: outcome_list'>
-				<li data-bind='text: name, click: select_outcome'>Outcome</a>
+			<ul class='top-level-list' data-bind='foreach: outcome_list'>
+				<li><a data-bind='text: name, click: select_outcome'>Outcome</a></li>
 			</ul>
+			<a class='action' data-bind='click: new_outcome'>+1 More</a>
 		</section>
 
 		<section class='backlog hide'>
-			<ul data-bind='foreach: backlog_list'>
-				<li data-bind='text: name, click: select_backlog'>Backlog</a>
+			<ul class='top-level-list' data-bind='foreach: backlog_list'>
+				<li><a data-bind='text: name, click: select_backlog'>Backlog</a></li>
 			</ul>
+			<a class='action' data-bind='click: new_backlogitem'>+1 More</a>
 		</section>
 
 		<section class='hypothesis hide'>
@@ -115,7 +139,7 @@ div.body {
 					</tr>
 				</thead>
 				<tbody data-bind='foreach: hypothesis_list'>
-					<tr data-bind='click: click'>
+					<tr data-bind='click: select'>
 						<td class='description' data-bind='text: description'></td>
 						<td class='persona' data-bind='text: persona().name'></td>
 						<td class='outcome' data-bind='text: outcome().name'></td>
@@ -125,7 +149,7 @@ div.body {
 					<tr>
 						<td colspan='2'></td>
 						<td class='action'>
-							<button class='action close' data-bind='click: addnew'>Add new</button>
+							<a class='action' data-bind='click: new_hypothesis'>+1 More</a>
 						</td>
 					</tr>
 				</tfoot>
@@ -133,7 +157,109 @@ div.body {
 		</section>
 
 		<section class='form hide'>
+		</section>
 
+		<section class='form hypothesis-form hide' data-bind="with: currentHypothesis">
+			<form data-bind="submit: submit">
+				<div class='form-header'>
+				</div>
+
+				<div class='form-body'>
+					<ul>
+						<li class='description'>
+							<label>Hypothesis</label>
+							<textarea data-bind="value: description"></textarea>
+						</li>
+						<li>
+							<label>Persona</label>
+							<select data-bind="options: vm.persona_list,optionsText: 'name',value: persona"></select>
+						</li>
+						<li>
+							<label>Outcome</label>
+							<select data-bind="options: vm.outcome_list,optionsText: 'name',value: outcome"></select>
+						</li>
+					</ul>
+				</div>
+
+				<div class='form-footer'>
+					<button type='submit' class='action close'>Done</button>
+				</div>
+			</form>
+		</section>
+
+
+		<section class='form backlog-form hide' data-bind="with: currentBacklogItem">
+			<form data-bind="submit: submit">
+				<div class='form-header'>
+				</div>
+
+				<div class='form-body'>
+					<ul>
+						<li class='name'>
+							<label>Name</label>
+							<input type='text' data-bind="value: name"></textarea>
+						</li>
+						<li class='description'>
+							<label>Description</label>
+							<textarea data-bind="value: description"></textarea>
+						</li>
+					</ul>
+				</div>
+
+				<div class='form-footer'>
+					<button type='submit' class='action close'>Done</button>
+				</div>
+			</form>
+		</section>
+
+
+		<section class='form outcome-form hide' data-bind="with: currentOutcome">
+			<form data-bind="submit: submit">
+				<div class='form-header'>
+				</div>
+
+				<div class='form-body'>
+					<ul>
+						<li class='name'>
+							<label>Name</label>
+							<input type='text' data-bind="value: name"></textarea>
+						</li>
+						<li class='description'>
+							<label>Description</label>
+							<textarea data-bind="value: description"></textarea>
+						</li>
+					</ul>
+				</div>
+
+				<div class='form-footer'>
+					<button type='submit' class='action close'>Done</button>
+				</div>
+			</form>
+		</section>
+
+
+		<section class='form persona-form hide' data-bind="with: currentPersona">
+			<form data-bind="submit: submit">
+				<div class='form-header'>
+				</div>
+
+				<div class='form-body'>
+					<ul>
+						<li class='name'>
+							<label>Name</label>
+							<input type='text' class='name' data-bind="value: name"></textarea>
+						</li>
+						<li class='role'>
+							<label>Role</label>
+							<input type='text' class='role' data-bind="value: role"></textarea>
+						</li>
+					</ul>
+				</div>
+
+				<div class='form-footer'>
+					<button type='submit' class='action close'>Done</button>
+				</div>
+			</form>
 		</section>
 
 
@@ -143,22 +269,28 @@ div.body {
 	</div>
 
 		<div class='form hypothesis hypothesis-form hide'>
-			<h2>hypothesis</h2>
-			<ul>
-				<li>
-					<textarea data-bind="value: description"></textarea>
-				</li>
-				<li>
-					<label>Persona: </label>
-					<label data-bind='text: persona().name'></label>
-				</li>
-				<li>
-					<label>Outcome</label>
-					<label data-bind='text: outcome().name'></label>
-				</li>
-			</ul>
+			<div class='form-header'>
+			</div>
 
-			<button class='action close' data-bind='click: close'>Close</button>
+			<div class='form-body'>
+				<ul>
+					<li>
+						<textarea data-bind="value: description"></textarea>
+					</li>
+					<li>
+						<label>Persona: </label>
+						<label data-bind='text: persona().name'></label>
+					</li>
+					<li>
+						<label>Outcome</label>
+						<label data-bind='text: outcome().name'></label>
+					</li>
+				</ul>
+			</div>
+
+			<div class='form-footer'>
+				<button class='action close' data-bind='click: close'>Done</button>
+			</div>
 		</div>
 
 		<script src="bower_components/jquery/dist/jquery.min.js"></script>
