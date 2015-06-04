@@ -12,13 +12,14 @@ function Project(id, n) {
 }
 
 /******************************************************************************/
-function Outcome(id, p, n, d) {
+function Outcome(id, p, n, d, s) {
   var self=this;
 
   self.id = id;
   self.project = ko.observable(p);
   self.name=ko.observable(n);
   self.description=ko.observable(d);
+  self.seq=s;
 
   self.select = function() {
     $( "section" ).addClass( "hide" );
@@ -40,13 +41,14 @@ function Outcome(id, p, n, d) {
 }
 
 /******************************************************************************/
-function Backlog(id, p, n, d) {
+function Backlog(id, p, n, d, s) {
   var self=this;
 
   self.id = id;
   self.project = ko.observable(p);
   self.name=ko.observable(n);
   self.description=ko.observable(d);
+  self.seq=s;
 
   self.select = function() {
     $( "section" ).addClass( "hide" );
@@ -67,13 +69,14 @@ function Backlog(id, p, n, d) {
 }
 
 /******************************************************************************/
-function Persona(id, p, n, r) {
+function Persona(id, p, n, r, s) {
   var self=this;
 
   self.id = id;
   self.project = ko.observable(p);
   self.name=ko.observable(n);
   self.role=ko.observable(r);
+  self.seq=s;
 
   self.select = function() {
     $( "section" ).addClass( "hide" );
@@ -95,7 +98,7 @@ function Persona(id, p, n, r) {
 }
 
 /******************************************************************************/
-function Hypothesis(id, pr, o, p, d) {
+function Hypothesis(id, pr, o, p, d, s) {
   var self=this;
 
   self.id = id;
@@ -103,6 +106,7 @@ function Hypothesis(id, pr, o, p, d) {
   self.outcome=ko.observable(o);
   self.persona=ko.observable(p);
   self.description=ko.observable(d);
+  self.seq=s;
 
   self.select = function(e) {
     $( "section" ).addClass( "hide" );

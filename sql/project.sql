@@ -173,7 +173,7 @@ ALTER TABLE public.project_tbl OWNER TO projectuser;
 -- Name: backlog_seq; Type: SEQUENCE SET; Schema: public; Owner: girvine
 --
 
-SELECT pg_catalog.setval('backlog_seq', 1, false);
+SELECT pg_catalog.setval('backlog_seq', 2, true);
 
 
 --
@@ -181,6 +181,8 @@ SELECT pg_catalog.setval('backlog_seq', 1, false);
 --
 
 COPY backlog_tbl (id, project_id, name, description) FROM stdin;
+1	1	B1	
+2	1	B2	
 \.
 
 
@@ -205,7 +207,7 @@ COPY hypothesis_tbl (id, project_id, persona_id, outcome_id, description) FROM s
 -- Name: outcome_seq; Type: SEQUENCE SET; Schema: public; Owner: projectuser
 --
 
-SELECT pg_catalog.setval('outcome_seq', 1, true);
+SELECT pg_catalog.setval('outcome_seq', 2, true);
 
 
 --
@@ -214,6 +216,7 @@ SELECT pg_catalog.setval('outcome_seq', 1, true);
 
 COPY outcome_tbl (id, project_id, name, description) FROM stdin;
 1	1	Remote Management	\N
+2	1	R2	
 \.
 
 
@@ -221,7 +224,7 @@ COPY outcome_tbl (id, project_id, name, description) FROM stdin;
 -- Name: persona_seq; Type: SEQUENCE SET; Schema: public; Owner: projectuser
 --
 
-SELECT pg_catalog.setval('persona_seq', 1, true);
+SELECT pg_catalog.setval('persona_seq', 2, true);
 
 
 --
@@ -230,6 +233,7 @@ SELECT pg_catalog.setval('persona_seq', 1, true);
 
 COPY persona_tbl (id, project_id, name, role, description) FROM stdin;
 1	1	Shane	Ops Manager	\N
+2	1	John	CEO	\N
 \.
 
 

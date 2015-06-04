@@ -9,8 +9,6 @@ select, input {
   font-size: 1em;
 }
 
-
-
 .hide {
   display: none;
 }
@@ -55,8 +53,14 @@ div.left li {
 	font-size: 0.8em;
 }
 
-nav a:hover {
-	text-decoration: underline;
+/******************************************************************************/
+.side-menu a {
+	font-weight: bold;
+	display: block;
+}
+
+.side-menu a.selected {
+	background-color: white;
 }
 
 .side-menu {
@@ -69,30 +73,30 @@ nav a:hover {
 	padding-left: 1em;
 }
 
+/******************************************************************************/
+.body header nav {
+	border-bottom: 1px solid lightgrey;
+}
+
+.body header nav a {
+	display: inline-block;
+}
+
+.body header nav a.selected {
+	border-bottom: 1px solid black;
+}
+
+nav a:hover {
+	text-decoration: underline;
+}
+
 nav a {
 	cursor: pointer;
 	padding: 0.5em 1em;
 	font-size: 0.8em;
 }
 
-.side-menu a {
-	font-weight: bold;
-	display: block;
-}
-.side-menu a.selected {
-	background-color: white;
-}
-
-.body header nav {
-	border-bottom: 1px solid lightgrey;
-}
-.body header nav a {
-	display: inline-block;
-}
-.body header nav a.selected {
-	border-bottom: 1px solid black;
-}
-
+/******************************************************************************/
 div.body {
 	padding: 0;
 }

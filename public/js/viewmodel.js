@@ -29,19 +29,43 @@ function HypothesisViewModel() {
 
   /****************************************************************************/
   self.new_backlogitem = function() {
-    var b = new Backlog(null, self.current_project(), "", "");
+    var l=self.backlog_list();
+    var seq=1;
+    if ( l.length > 0 ) {
+      seq = l[l.length-1].seq+1;
+    }
+
+    var b = new Backlog(null, self.current_project(), "", "", seq);
     b.select();
   };
   self.new_outcome = function() {
-    var o = new Outcome(null, self.current_project(), "", "");
+    var l=self.outcome_list();
+    var seq=1;
+    if ( l.length > 0 ) {
+      seq = l[l.length-1].seq+1;
+    }
+
+    var o = new Outcome(null, self.current_project(), "", "", seq);
     o.select();
   };
   self.new_persona = function() {
-    var p = new Persona(null, self.current_project(), "", "");
+    var l=self.persona_list();
+    var seq=1;
+    if ( l.length > 0 ) {
+      seq = l[l.length-1].seq+1;
+    }
+
+    var p = new Persona(null, self.current_project(), "", "", seq);
     p.select();
   };
   self.new_hypothesis = function() {
-    var h = new Hypothesis(null, self.current_project(), null, null, null);
+    var l=self.hypothesis_list();
+    var seq=1;
+    if ( l.length > 0 ) {
+      seq = l[l.length-1].seq+1;
+    }
+
+    var h = new Hypothesis(null, self.current_project(), null, null, null, seq);
     h.select();
   };
 

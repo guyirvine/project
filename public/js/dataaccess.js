@@ -6,7 +6,8 @@ function DataAccess() {
     data = {
       project_id: o.project().id,
       name: o.name(),
-      description: o.description()
+      description: o.description(),
+      seq: o.seq
     };
 
     if ( o.id === null ) {
@@ -24,7 +25,8 @@ function DataAccess() {
     data = {
       project_id: p.project().id,
       name: p.name(),
-      role: p.role()
+      role: p.role(),
+      seq: p.seq
     };
 
     if ( p.id === null ) {
@@ -42,7 +44,8 @@ function DataAccess() {
     data = {
       project_id: b.project().id,
       name: b.name(),
-      description: b.description()
+      description: b.description(),
+      seq: b.seq
     };
 
     if ( b.id === null ) {
@@ -61,7 +64,8 @@ function DataAccess() {
       project_id: h.project().id,
       outcome_id: h.outcome().id,
       persona_id: h.persona().id,
-      description: h.description()
+      description: h.description(),
+      seq: h.seq
     };
 
     if ( h.id === null ) {
@@ -90,17 +94,17 @@ function DataAccess() {
 
       vm.outcome_list.removeAll();
       _.each(JSON.parse( outcome_data[0] ), function(el) {
-        vm.add_outcome( new Outcome( el.id, vm.current_project(), el.name, el.description ) );
+        vm.add_outcome( new Outcome( el.id, vm.current_project(), el.name, el.description, Number(el.seq) ) );
       });
 
       vm.backlog_list.removeAll();
       _.each(JSON.parse( backlog_data[0] ), function(el) {
-        vm.add_backlog( new Backlog( el.id, vm.current_project(), el.name, el.description ) );
+        vm.add_backlog( new Backlog( el.id, vm.current_project(), el.name, el.description, Number(el.seq) ) );
       });
 
       vm.persona_list.removeAll();
       _.each(JSON.parse( persona_data[0] ), function(el) {
-        vm.add_persona(new Persona( el.id, vm.current_project(), el.name, el.role ));
+        vm.add_persona(new Persona( el.id, vm.current_project(), el.name, el.role, Number(el.seq) ));
       });
 
       vm.hypothesis_list.removeAll();
@@ -108,7 +112,7 @@ function DataAccess() {
         var o=vm.outcome_idx[el.outcome_id];
         var p=vm.persona_idx[el.persona_id];
 
-        vm.add_hypothesis(new Hypothesis(el.id, vm.current_project(), o, p, el.description));
+        vm.add_hypothesis(new Hypothesis(el.id, vm.current_project(), o, p, el.description, Number(el.seq)));
       });
     });
   };
