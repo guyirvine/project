@@ -1,0 +1,49 @@
+table.grid {
+  font-size: 0.8em;
+  border-collapse: collapse;
+}
+
+table.grid th {
+  text-transform: capitalize;
+  text-align: left;
+}
+
+table.grid thead th {
+  background-color: lightgrey;
+  border: 1px solid black;
+}
+
+table.grid th, table.grid td {
+  padding: 12px 9px;
+}
+
+table.grid tbody td {
+  border: 1px solid black;
+}
+
+table.grid tbody tr:hover {
+  background-color: lightgrey;
+  cursor: pointer;
+}
+
+table.grid tfoot td.action {
+  text-align: right;
+}
+
+/******************************************************************************/
+table.grid {
+  width: 100%;
+}
+
+table.grid td.description {
+  width: 60%;
+}
+table.grid td.persona {
+  width: 20%;
+}
+table.grid td.outcome {
+  width: 20%;
+}
+table.grid td.backlog {
+  width: 20%;
+}
