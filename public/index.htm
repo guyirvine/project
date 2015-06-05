@@ -113,7 +113,7 @@
 					<ul>
 						<li>
 							<label>For</label>
-							<span data-bind="text: persona().name"></span>
+							<span data-bind="html: persona().labelHtml"></span>
 						</li>
 						<li>
 							<label>Will lead to</label>
@@ -146,7 +146,7 @@
 				<tbody data-bind='foreach: hypothesis_list'>
 					<tr data-bind='click: select'>
 						<td class='description' data-bind='text: description'></td>
-						<td class='persona' data-bind='text: persona().name'></td>
+						<td class='persona' data-bind='text: persona().label'></td>
 						<td class='outcome' data-bind='text: outcome().name'></td>
 						<td class='importance val' data-bind='text: importance'></td>
 						<td class='uncertainty val' data-bind='text: uncertainty'></td>
@@ -179,7 +179,7 @@
 						</li>
 						<li>
 							<label>Persona</label>
-							<select data-bind="options: vm.persona_list,optionsText: 'name',value: persona"></select>
+							<select data-bind="options: vm.persona_list,optionsText: 'label',value: persona"></select>
 						</li>
 						<li>
 							<label>Outcome</label>

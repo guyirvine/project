@@ -69,10 +69,19 @@ function Persona(id, p, n, r, s) {
   var self=this;
 
   self.id = id;
-  self.project = ko.observable(p);
+  self.project=ko.observable(p);
   self.name=ko.observable(n);
   self.role=ko.observable(r);
   self.seq=s;
+
+  self.labelHtml=ko.computed(function() {
+    return self.name() + " <span class='role'>- " + self.role() + "</span>";
+  });
+
+  self.label=ko.computed(function() {
+    return self.name() + " - " + self.role();
+  });
+
 
   self.select = function() {
     vm.currentPersona( self );
