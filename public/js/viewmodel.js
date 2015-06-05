@@ -48,6 +48,7 @@ function HypothesisViewModel() {
     var o = new Outcome(null, self.current_project(), "", "", seq);
     o.select();
   };
+
   self.new_persona = function() {
     var l=self.persona_list();
     var seq=1;
@@ -58,6 +59,7 @@ function HypothesisViewModel() {
     var p = new Persona(null, self.current_project(), "", "", seq);
     p.select();
   };
+
   self.new_hypothesis = function() {
     var l=self.hypothesis_list();
     var seq=1;
@@ -65,7 +67,7 @@ function HypothesisViewModel() {
       seq = l[l.length-1].seq+1;
     }
 
-    var h = new Hypothesis(null, self.current_project(), null, null, null, seq);
+    var h = new Hypothesis(null, self.current_project(), null, null, null, 1, 1, seq);
     h.select();
   };
 
@@ -105,7 +107,7 @@ function HypothesisViewModel() {
   /****************************************************************************/
   self.show_project = function(id) {
     da.get_for_project( id );
-    self.show( "backlog" );
+    self.show( "hypothesis" );
   };
 
   self._show = function( c ) {

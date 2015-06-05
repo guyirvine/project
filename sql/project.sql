@@ -51,7 +51,8 @@ CREATE TABLE backlog_tbl (
     id bigint DEFAULT nextval('backlog_seq'::regclass) NOT NULL,
     project_id bigint NOT NULL,
     name character varying NOT NULL,
-    description character varying
+    description character varying,
+    seq integer NOT NULL
 );
 
 
@@ -80,7 +81,8 @@ CREATE TABLE hypothesis_tbl (
     project_id bigint NOT NULL,
     persona_id bigint NOT NULL,
     outcome_id bigint NOT NULL,
-    description character varying NOT NULL
+    description character varying NOT NULL,
+    seq integer NOT NULL
 );
 
 
@@ -108,7 +110,8 @@ CREATE TABLE outcome_tbl (
     id bigint DEFAULT nextval('outcome_seq'::regclass) NOT NULL,
     project_id bigint NOT NULL,
     name character varying NOT NULL,
-    description character varying
+    description character varying,
+    seq integer NOT NULL
 );
 
 
@@ -137,7 +140,8 @@ CREATE TABLE persona_tbl (
     project_id bigint NOT NULL,
     name character varying NOT NULL,
     role character varying NOT NULL,
-    description character varying
+    description character varying,
+    seq integer NOT NULL
 );
 
 
@@ -180,9 +184,9 @@ SELECT pg_catalog.setval('backlog_seq', 2, true);
 -- Data for Name: backlog_tbl; Type: TABLE DATA; Schema: public; Owner: girvine
 --
 
-COPY backlog_tbl (id, project_id, name, description) FROM stdin;
-1	1	B1	
-2	1	B2	
+COPY backlog_tbl (id, project_id, name, description, seq) FROM stdin;
+2	1	B2		2
+1	1	Add +1 More for Project		1
 \.
 
 
@@ -197,9 +201,9 @@ SELECT pg_catalog.setval('hypothesis_seq', 2, true);
 -- Data for Name: hypothesis_tbl; Type: TABLE DATA; Schema: public; Owner: projectuser
 --
 
-COPY hypothesis_tbl (id, project_id, persona_id, outcome_id, description) FROM stdin;
-1	1	1	1	View 1
-2	1	1	1	View 2
+COPY hypothesis_tbl (id, project_id, persona_id, outcome_id, description, seq) FROM stdin;
+1	1	1	2	Add complete a jpb	1
+2	1	1	1	Add uncertainty to hypothesis	2
 \.
 
 
@@ -214,9 +218,9 @@ SELECT pg_catalog.setval('outcome_seq', 2, true);
 -- Data for Name: outcome_tbl; Type: TABLE DATA; Schema: public; Owner: projectuser
 --
 
-COPY outcome_tbl (id, project_id, name, description) FROM stdin;
-1	1	Remote Management	\N
-2	1	R2	
+COPY outcome_tbl (id, project_id, name, description, seq) FROM stdin;
+1	1	Remote Management	\N	1
+2	1	Visualise Workflow		2
 \.
 
 
@@ -231,9 +235,9 @@ SELECT pg_catalog.setval('persona_seq', 2, true);
 -- Data for Name: persona_tbl; Type: TABLE DATA; Schema: public; Owner: projectuser
 --
 
-COPY persona_tbl (id, project_id, name, role, description) FROM stdin;
-1	1	Shane	Ops Manager	\N
-2	1	John	CEO	\N
+COPY persona_tbl (id, project_id, name, role, description, seq) FROM stdin;
+1	1	Guy	Decision Maker	\N	1
+2	1	Angus	Programmer	\N	2
 \.
 
 
@@ -249,7 +253,7 @@ SELECT pg_catalog.setval('project_seq', 1, true);
 --
 
 COPY project_tbl (id, name) FROM stdin;
-1	Jobs On Farm
+1	Project
 \.
 
 

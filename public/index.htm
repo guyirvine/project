@@ -108,6 +108,8 @@
 						<th>feature</th>
 						<th>persona</th>
 						<th>outcome</th>
+						<th class='importance'>importance</th>
+						<th class='uncertainty'>uncertainty</th>
 					</tr>
 				</thead>
 				<tbody data-bind='foreach: hypothesis_list'>
@@ -115,11 +117,13 @@
 						<td class='description' data-bind='text: description'></td>
 						<td class='persona' data-bind='text: persona().name'></td>
 						<td class='outcome' data-bind='text: outcome().name'></td>
+						<td class='importance val' data-bind='text: importance'></td>
+						<td class='uncertainty val' data-bind='text: uncertainty'></td>
 					</tr>
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan='2'></td>
+						<td colspan='4'></td>
 						<td class='action'>
 							<a class='action' data-bind='click: new_hypothesis'>+1 More</a>
 						</td>

@@ -126,7 +126,7 @@ end
 
 # *****************************************************************************
 get '/project/:id/hypothesis' do
-  sql = 'SELECT h.id, h.outcome_id, h.persona_id, h.description, h.seq
+  sql = 'SELECT h.id, h.outcome_id, h.persona_id, h.description, h.importance, h.uncertainty, h.seq
           FROM hypothesis_tbl h
           WHERE h.project_id = ?
           ORDER BY seq'

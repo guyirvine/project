@@ -98,7 +98,7 @@ function Persona(id, p, n, r, s) {
 }
 
 /******************************************************************************/
-function Hypothesis(id, pr, o, p, d, s) {
+function Hypothesis(id, pr, o, p, d, i, u, s) {
   var self=this;
 
   self.id = id;
@@ -106,6 +106,8 @@ function Hypothesis(id, pr, o, p, d, s) {
   self.outcome=ko.observable(o);
   self.persona=ko.observable(p);
   self.description=ko.observable(d);
+  self.importance=ko.observable(i);
+  self.uncertainty=ko.observable(u);
   self.seq=s;
 
   self.select = function(e) {
