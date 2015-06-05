@@ -22,15 +22,13 @@ function Outcome(id, p, n, d, s) {
   self.seq=s;
 
   self.select = function() {
-    $( "section" ).addClass( "hide" );
     vm.currentOutcome( self );
-    $( "section.outcome-form" ).removeClass( "hide" );
+    vm.show("outcome-form");
     $( 'section.outcome-form input' ).focus();
   };
 
   self.submit = function(e) {
-    $( "section" ).addClass( "hide" );
-    $( "section.outcome" ).removeClass( "hide" );
+    vm.ret();
 
     if ( self.id === null ) {
       vm.add_outcome( self );
@@ -51,15 +49,13 @@ function Backlog(id, p, n, d, s) {
   self.seq=s;
 
   self.select = function() {
-    $( "section" ).addClass( "hide" );
     vm.currentBacklogItem( self );
-    $( "section.backlog-form" ).removeClass( "hide" );
+    vm.show("backlog-form");
     $( 'section.backlog-form input' ).focus();
   };
 
   self.submit = function(e) {
-    $( "section" ).addClass( "hide" );
-    $( "section.backlog" ).removeClass( "hide" );
+    vm.ret();
 
     if ( self.id === null ) {
       vm.add_backlog( self );
@@ -79,15 +75,13 @@ function Persona(id, p, n, r, s) {
   self.seq=s;
 
   self.select = function() {
-    $( "section" ).addClass( "hide" );
     vm.currentPersona( self );
-    $( "section.persona-form" ).removeClass( "hide" );
+    vm.show("persona-form");
     $( 'section.persona-form input.name' ).focus();
   };
 
   self.submit = function(e) {
-    $( "section" ).addClass( "hide" );
-    $( "section.persona" ).removeClass( "hide" );
+    vm.ret();
 
     if ( self.id === null ) {
       vm.add_persona( self );
@@ -111,15 +105,13 @@ function Hypothesis(id, pr, o, p, d, i, u, s) {
   self.seq=s;
 
   self.select = function(e) {
-    $( "section" ).addClass( "hide" );
+    vm.show("hypothesis-form");
     vm.currentHypothesis( self );
-    $( "section.hypothesis-form" ).removeClass( "hide" );
     $( 'section.hypothesis-form textarea' ).focus();
   };
 
   self.submit = function(e) {
-    $( "section" ).addClass( "hide" );
-    $( "section.hypothesis" ).removeClass( "hide" );
+    vm.ret();
 
     if ( self.id === null ) {
       vm.add_hypothesis( self );

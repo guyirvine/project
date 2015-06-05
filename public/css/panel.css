@@ -1,0 +1,54 @@
+.hypothesis-panels .screen {
+	position: relative;
+}
+
+.hypothesis-panels .panel {
+	border: 1px solid black;
+	display: inline-block;
+	width: 20em;
+	cursor: pointer;
+}
+
+.hypothesis-panels .panel .title {
+	background-color: lightgrey;
+	padding: 0.5em 1em;
+}
+
+.hypothesis-panels .panel .title span {
+	font-size: 0.8em;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.hypothesis-panels .panel .description {
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	padding: 0.5em 1em;
+}
+
+.hypothesis-panels .panel ul {
+	padding-left: 0;
+}
+
+.hypothesis-panels .panel li {
+	list-style: none;
+  padding: 0.7em 1em;
+}
+
+.hypothesis-panels .panel li label {
+	font-size: 0.8em;
+	font-weight: bold;
+	text-transform: uppercase;
+  padding: 0.1em 1em;
+}
+
+.hypothesis-panels .panel .ratings {
+  border-top: 1px solid black;
+}
+
+.hypothesis-panels .panel .ratings .rating {
+  width: 38%;
+  display: inline-block;
+  text-align: center;
+  padding: 0.1em 1em;
+}

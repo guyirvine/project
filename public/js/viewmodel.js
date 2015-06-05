@@ -1,6 +1,9 @@
 function HypothesisViewModel() {
   var self=this;
 
+  self.last=null;
+  self.curr=null;
+
   /****************************************************************************/
   self.currentHypothesis = ko.observable();
   self.currentBacklogItem = ko.observable();
@@ -107,7 +110,7 @@ function HypothesisViewModel() {
   /****************************************************************************/
   self.show_project = function(id) {
     da.get_for_project( id );
-    self.show( "hypothesis" );
+    self.show( "hypothesis-panels" );
   };
 
   self._show = function( c ) {
@@ -119,6 +122,17 @@ function HypothesisViewModel() {
   };
 
   self.show = function( c ) {
+    self.last=self.curr;
+    self.curr=c;
+    self._show( c );
+    history.pushState( { "view": c }, 'c', "#" + c );
+  };
+
+  self.ret = function() {
+    var c=self.last;
+    
+    self.last=self.curr;
+    self.curr=c;
     self._show( c );
     history.pushState( { "view": c }, 'c', "#" + c );
   };

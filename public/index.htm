@@ -4,6 +4,7 @@
 		<link rel="stylesheet" type="text/css" href="css/main.css" media="screen" />
 		<link rel="stylesheet" type="text/css" href="css/grid.css" media="screen" />
 		<link rel="stylesheet" type="text/css" href="css/form.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="css/panel.css" media="screen" />
 	</head>
 	<style>
 	</style>
@@ -20,8 +21,8 @@
 		<header>
 			<nav>
 				<a name='persona' class='persona'>Persona</a>
-				<a name='outcome' class='outcome'>Outcome</a>
-				<a name='hypothesis' class='hypothesis'>Hypothesis</a>
+				<a name='outcome' class='outcome outcome-form'>Outcome</a>
+				<a name='hypothesis-panels' class='hypothesis hypothesis-panels'>Hypothesis</a>
 				<a name='backlog' class='backlog'>Backlog</a>
 			</nav>
 		</header>
@@ -101,6 +102,32 @@
 			</table>
 		</section>
 
+		<section class='hypothesis-panels hide'>
+			<a class='action' data-bind='click: new_hypothesis'>+1 More</a>
+			<div class='screen' data-bind='foreach: hypothesis_list'>
+				<div class='panel' data-bind='click: select'>
+					<div class='title'>
+						<span>Hypothesis</span>
+					</div>
+					<div class='description' data-bind="text: description"></div>
+					<ul>
+						<li>
+							<label>For</label>
+							<span data-bind="text: persona().name"></span>
+						</li>
+						<li>
+							<label>Will lead to</label>
+							<span data-bind="text: outcome().name"></span>
+						</li>
+					</ul>
+					<div class='ratings'>
+						<div class='rating importance'>Importance</div>
+						<div class='rating uncertainty'>Uncertainty</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
 		<section class='hypothesis hide'>
 			<table class='grid'>
 				<thead>
@@ -153,6 +180,14 @@
 						<li>
 							<label>Outcome</label>
 							<select data-bind="options: vm.outcome_list,optionsText: 'name',value: outcome"></select>
+						</li>
+						<li class='importance'>
+							<label>Importance</label>
+							<input type='number' data-bind="value: importance" min='1' max='3'></textarea>
+						</li>
+						<li class='uncertainty'>
+							<label>Uncertainty</label>
+							<input type='number' data-bind="value: uncertainty" min='1' max='3'></textarea>
 						</li>
 					</ul>
 				</div>
