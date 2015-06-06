@@ -46,6 +46,7 @@ function DataAccess() {
       outcome_id: h.outcome().id,
       persona_id: h.persona().id,
       description: h.description(),
+      testing: h.testing(),
       status_id: h.status().id,
       seq: h.seq
     };
@@ -94,7 +95,7 @@ function DataAccess() {
         var i=vm.range_idx[el.importance];
         var u=vm.range_idx[el.uncertainty];
 
-        vm.add_hypothesis(new Hypothesis(el.id, vm.current_project(), o, p, el.description, i, u, st, Number(el.seq)));
+        vm.add_hypothesis(new Hypothesis(el.id, vm.current_project(), o, p, el.description, el.testing, i, u, st, Number(el.seq)));
       });
     });
   };
