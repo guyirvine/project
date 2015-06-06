@@ -79,7 +79,7 @@ function ViewModel() {
 
     var status=vm.status_idx[status_id];
 
-    var h = new Hypothesis(null, self.current_project(), null, null, null, 1, 1, status, seq);
+    var h = new Hypothesis(null, self.current_project(), null, null, null, null, 1, 1, status, seq);
     h.select();
   };
 
