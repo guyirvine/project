@@ -91,7 +91,10 @@ function DataAccess() {
         var p=vm.persona_idx[el.persona_id];
         var st=vm.status_idx[el.status_id];
 
-        vm.add_hypothesis(new Hypothesis(el.id, vm.current_project(), o, p, el.description, Number(el.importance), Number(el.uncertainty), st, Number(el.seq)));
+        var i=vm.range_idx[el.importance];
+        var u=vm.range_idx[el.uncertainty];
+
+        vm.add_hypothesis(new Hypothesis(el.id, vm.current_project(), o, p, el.description, i, u, st, Number(el.seq)));
       });
     });
   };

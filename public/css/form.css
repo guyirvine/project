@@ -17,7 +17,7 @@ section.form li {
   padding-bottom: 1em;
 }
 
-section.form li label {
+section.form label {
   display: inline-block;
   width: 5em;
   text-align: right;
@@ -27,19 +27,33 @@ section.form li label {
 	text-transform: capitalize;
 }
 
-section.form li textarea {
+section.form textarea {
   width: 80%;
   padding: 0.3em 0.7em
 }
 
+section.form ul {
+  display: inline-block;
+  vertical-align: top;
+  width: 49%;
+}
+
+section.form ul.attributes li {
+  margin-bottom: 0.7em;
+}
+
 section.form li input {
   width: 40%;
-  padding: 0.3em 0.7em
+  padding: 0.3em 1.7em
+}
+
+section.form ul.attributes li select {
+  width: 9em;
 }
 
 section.form li option {
   padding: 0.3em 0.7em;
-  font-size: 18px;
+  font-size: 0.9em;
 }
 
 section.form div.form-footer {
@@ -47,6 +61,6 @@ section.form div.form-footer {
   text-align: right;
 }
 
-section.form li.description label {
+section.form label {
   vertical-align: top;
 }

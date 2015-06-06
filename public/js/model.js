@@ -11,6 +11,17 @@ function Status(id, n) {
 }
 
 /******************************************************************************/
+Range.LOW=1;
+Range.MEDIUM=2;
+Range.HIGH=3;
+function Range(id, n) {
+  var self=this;
+
+  self.id=id;
+  self.name=ko.observable(n);
+}
+
+/******************************************************************************/
 function Project(id, n) {
   var self=this;
 

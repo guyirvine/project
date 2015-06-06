@@ -1,1 +1,1 @@
-DROP TABLE status_tbl;
+DROP TABLE backlog_tbl;

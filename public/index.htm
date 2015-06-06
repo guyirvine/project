@@ -24,6 +24,7 @@
 				<a name='outcome' class='outcome outcome-form'>Outcome</a>
 				<a name='hypothesis-panels' class='hypothesis hypothesis-form hypothesis-panels'>Hypothesis</a>
 				<a name='backlog' class='backlog backlog-form'>Backlog</a>
+				<a name='closed' class='closed closed-form'>Closed</a>
 			</nav>
 		</header>
 
@@ -35,7 +36,7 @@
 						<th>role</th>
 					</tr>
 				</thead>
-				<tbody data-bind='foreach: persona_list'>
+				<tbody data-bind='foreach: persona_display_list'>
 					<tr data-bind='click: select'>
 						<td class='persona' data-bind='text: name'></td>
 						<td class='role' data-bind='text: role'></td>
@@ -60,7 +61,7 @@
 						<th>description</th>
 					</tr>
 				</thead>
-				<tbody data-bind='foreach: outcome_list'>
+				<tbody data-bind='foreach: outcome_display_list'>
 					<tr data-bind='click: select'>
 						<td class='outcome' data-bind='text: name'></td>
 						<td class='description' data-bind='text: description'></td>
@@ -95,16 +96,35 @@
 					<tr>
 						<td colspan=''></td>
 						<td class='action'>
-							<a class='action' data-bind='click: new_backlogitem'>+1 More</a>
+							<a class='action' data-bind='click: new_hypothesis(Status.BACKLOG)'>+1 More</a>
 						</td>
 					</tr>
 				</tfoot>
 			</table>
 		</section>
 
+		<section class='closed hide'>
+			<table class='grid'>
+				<thead>
+					<tr>
+						<th>hypothesis</th>
+						<th>backlog</th>
+					</tr>
+				</thead>
+				<tbody data-bind='foreach: closed_list'>
+					<tr data-bind='click: select'>
+						<td class='description' data-bind='text: description'></td>
+						<td class='backlog' data-bind='text: outcome().name'></td>
+					</tr>
+				</tbody>
+				<tfoot>
+				</tfoot>
+			</table>
+		</section>
+
 		<section class='hypothesis-panels hide'>
-			<a class='action' data-bind='click: new_hypothesis'>+1 More</a>
-			<div class='screen' data-bind='foreach: hypothesis_list'>
+			<a class='action' data-bind='click: new_hypothesis(Status.OPEN)'>+1 More</a>
+			<div class='screen' data-bind='foreach: current_list'>
 				<div class='panel' data-bind='click: select'>
 					<div class='title'>
 						<span>Hypothesis</span>
@@ -121,46 +141,15 @@
 						</li>
 						<li>
 							<label>Importance</label>
-							<span data-bind="text: importance"></span>
+							<span data-bind="text: importance().name"></span>
 						</li>
 						<li>
 							<label>Uncertainty</label>
-							<span data-bind="text: uncertainty"></span>
+							<span data-bind="text: uncertainty().name"></span>
 						</li>
 					</ul>
 				</div>
 			</div>
-		</section>
-
-		<section class='hypothesis hide'>
-			<table class='grid'>
-				<thead>
-					<tr>
-						<th>feature</th>
-						<th>persona</th>
-						<th>outcome</th>
-						<th class='importance'>importance</th>
-						<th class='uncertainty'>uncertainty</th>
-					</tr>
-				</thead>
-				<tbody data-bind='foreach: hypothesis_list'>
-					<tr data-bind='click: select'>
-						<td class='description' data-bind='text: description'></td>
-						<td class='persona' data-bind='text: persona().label'></td>
-						<td class='outcome' data-bind='text: outcome().name'></td>
-						<td class='importance val' data-bind='text: importance'></td>
-						<td class='uncertainty val' data-bind='text: uncertainty'></td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-						<td colspan='4'></td>
-						<td class='action'>
-							<a class='action' data-bind='click: new_hypothesis'>+1 More</a>
-						</td>
-					</tr>
-				</tfoot>
-			</table>
 		</section>
 
 		<section class='form hide'>
@@ -172,30 +161,32 @@
 				</div>
 
 				<div class='form-body'>
+					<div class='description'>
+						<label>Hypothesis</label>
+						<textarea data-bind="value: description"></textarea>
+					</div>
 					<ul>
-						<li class='description'>
-							<label>Hypothesis</label>
-							<textarea data-bind="value: description"></textarea>
-						</li>
 						<li>
 							<label>Persona</label>
-							<select data-bind="options: vm.persona_list,optionsText: 'label',value: persona"></select>
+							<select size='3' data-bind="options: vm.persona_list,optionsText: 'label',value: persona"></select>
 						</li>
 						<li>
 							<label>Outcome</label>
-							<select data-bind="options: vm.outcome_list,optionsText: 'name',value: outcome"></select>
+							<select size='6' data-bind="options: vm.outcome_list,optionsText: 'name',value: outcome"></select>
 						</li>
+					</ul>
+					<ul class='attributes'>
 						<li class='importance'>
 							<label>Importance</label>
-							<input type='number' data-bind="value: importance" min='1' max='3'></textarea>
+							<select size='3' data-bind="options: vm.range_list,optionsText: 'name',value: importance"></select>
 						</li>
 						<li class='uncertainty'>
 							<label>Uncertainty</label>
-							<input type='number' data-bind="value: uncertainty" min='1' max='3'></textarea>
+							<select size='3' data-bind="options: vm.range_list,optionsText: 'name',value: uncertainty"></select>
 						</li>
 						<li>
 							<label>Status</label>
-							<select data-bind="options: vm.status_list,optionsText: 'name',value: status"></select>
+							<select size='3' data-bind="options: vm.status_list,optionsText: 'name',value: status"></select>
 						</li>
 					</ul>
 				</div>

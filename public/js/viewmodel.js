@@ -20,6 +20,8 @@ function ViewModel() {
     return self.current_project().name();
   });
 
+  self.range_list = ko.observableArray();
+  self.range_idx = {};
   self.status_list = ko.observableArray();
   self.status_idx = {};
   self.outcome_list = ko.observableArray();
@@ -27,24 +29,25 @@ function ViewModel() {
   self.persona_list = ko.observableArray();
   self.persona_idx = {};
   self.hypothesis_list = ko.observableArray();
-  self.hypothesis_idx = {};
-  self.list = ko.observableArray();
 
+  self.persona_display_list = ko.computed(function() {
+    return _.filter( self.persona_list(), function(el) {return el.id !== null;});
+  });
+  self.outcome_display_list = ko.computed(function() {
+    return _.filter( self.outcome_list(), function(el) {return el.id !== null;});
+  });
+
+  self.current_list = ko.computed(function() {
+    return _.filter( self.hypothesis_list(), function(el) {return el.status().id === Status.OPEN;});
+  });
   self.backlog_list = ko.computed(function() {
     return _.filter( self.hypothesis_list(), function(el) {return el.status().id === Status.BACKLOG;});
   });
+  self.closed_list = ko.computed(function() {
+    return _.filter( self.hypothesis_list(), function(el) {return el.status().id === Status.CLOSED;});
+  });
 
   /****************************************************************************/
-  self.new_backlogitem = function() {
-    var l=self.backlog_list();
-    var seq=1;
-    if ( l.length > 0 ) {
-      seq = l[l.length-1].seq+1;
-    }
-
-    var b = new Backlog(null, self.current_project(), "", "", seq);
-    b.select();
-  };
   self.new_outcome = function() {
     var l=self.outcome_list();
     var seq=1;
@@ -67,18 +70,24 @@ function ViewModel() {
     p.select();
   };
 
-  self.new_hypothesis = function() {
+  self.new_hypothesis = function( status_id ) {
     var l=self.hypothesis_list();
     var seq=1;
     if ( l.length > 0 ) {
       seq = l[l.length-1].seq+1;
     }
 
-    var h = new Hypothesis(null, self.current_project(), null, null, null, 1, 1, null, seq);
+    var status=vm.status_idx[status_id];
+
+    var h = new Hypothesis(null, self.current_project(), null, null, null, 1, 1, status, seq);
     h.select();
   };
 
   /****************************************************************************/
+  self.add_range=function(r) {
+    self.range_list.push(r);
+    self.range_idx[r.id]=r;
+  };
   self.add_status=function(s) {
     self.status_list.push(s);
     self.status_idx[s.id]=s;
@@ -101,7 +110,6 @@ function ViewModel() {
   };
   self.add_hypothesis=function(h) {
     self.hypothesis_list.push(h);
-    self.hypothesis_idx[h.id]=h;
   };
 
   /****************************************************************************/
@@ -160,6 +168,10 @@ function ViewModel() {
   };
 
   /****************************************************************************/
+  self.add_range( new Range( Range.LOW, 'Low' ) );
+  self.add_range( new Range( Range.MEDIUM, 'Medium' ) );
+  self.add_range( new Range( Range.HIGH, 'High' ) );
+
   $.when(
     $.get('/status'),
     $.get('/project')
