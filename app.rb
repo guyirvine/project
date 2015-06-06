@@ -18,6 +18,12 @@ get '/' do
 end
 
 # *****************************************************************************
+get '/status' do
+  sql = 'SELECT id, name FROM status_tbl'
+  @db.queryForResultset(sql, []).to_json
+end
+
+# *****************************************************************************
 get '/project' do
   sql = 'SELECT id, name FROM project_tbl'
   @db.queryForResultset(sql, []).to_json
@@ -126,7 +132,7 @@ end
 
 # *****************************************************************************
 get '/project/:id/hypothesis' do
-  sql = 'SELECT h.id, h.outcome_id, h.persona_id, h.description, h.importance, h.uncertainty, h.seq
+  sql = 'SELECT h.id, h.outcome_id, h.persona_id, h.description, h.importance, h.uncertainty, h.status_id, h.seq
           FROM hypothesis_tbl h
           WHERE h.project_id = ?
           ORDER BY seq'
@@ -143,8 +149,8 @@ post '/hypothesis/:id' do
   data = request.body.read
   p = JSON.parse(data)
 
-  sql = 'UPDATE hypothesis_tbl SET outcome_id=?, persona_id=?, description=?, seq=? WHERE id = ?'
-  @db.execute(sql, [p['outcome_id'], p['persona_id'], p['description'], p['seq'], params[:id]])
+  sql = 'UPDATE hypothesis_tbl SET outcome_id=?, persona_id=?, description=?, status_id=?, seq=? WHERE id = ?'
+  @db.execute(sql, [p['outcome_id'], p['persona_id'], p['description'], p['status_id'], p['seq'], params[:id]])
 end
 
 post '/hypothesis' do
@@ -152,9 +158,9 @@ post '/hypothesis' do
   data = request.body.read
   p = JSON.parse(data)
 
-  sql = 'INSERT INTO hypothesis_tbl( id, project_id, outcome_id, persona_id, description, seq ) ' \
-          "VALUES ( NEXTVAL('hypothesis_seq'), ?, ?, ?, ?, ? )"
-  @db.execute(sql, [p['project_id'], p['outcome_id'], p['persona_id'], p['description'], p['seq']])
+  sql = 'INSERT INTO hypothesis_tbl( id, project_id, outcome_id, persona_id, description, status_id, seq ) ' \
+          "VALUES ( NEXTVAL('hypothesis_seq'), ?, ?, ?, ?, ?, ? )"
+  @db.execute(sql, [p['project_id'], p['outcome_id'], p['persona_id'], p['description'], p['status_id'], p['seq']])
 
   @db.queryForValue("SELECT CURRVAL( 'hypothesis_seq' )")
 end

@@ -1,4 +1,16 @@
 /******************************************************************************/
+Status.BACKLOG=1;
+Status.OPEN=2;
+Status.CLOSED=3;
+function Status(id, n) {
+  var self=this;
+
+  self.id=id;
+  self.name=ko.observable(n);
+
+}
+
+/******************************************************************************/
 function Project(id, n) {
   var self=this;
 
@@ -39,32 +51,6 @@ function Outcome(id, p, n, d, s) {
 }
 
 /******************************************************************************/
-function Backlog(id, p, n, d, s) {
-  var self=this;
-
-  self.id = id;
-  self.project = ko.observable(p);
-  self.name=ko.observable(n);
-  self.description=ko.observable(d);
-  self.seq=s;
-
-  self.select = function() {
-    vm.currentBacklogItem( self );
-    vm.show("backlog-form");
-    $( 'section.backlog-form input' ).focus();
-  };
-
-  self.submit = function(e) {
-    vm.ret();
-
-    if ( self.id === null ) {
-      vm.add_backlog( self );
-    }
-    da.update_backlog( self );
-  };
-}
-
-/******************************************************************************/
 function Persona(id, p, n, r, s) {
   var self=this;
 
@@ -101,7 +87,7 @@ function Persona(id, p, n, r, s) {
 }
 
 /******************************************************************************/
-function Hypothesis(id, pr, o, p, d, i, u, s) {
+function Hypothesis(id, pr, o, p, d, i, u, st, s) {
   var self=this;
 
   self.id = id;
@@ -111,6 +97,7 @@ function Hypothesis(id, pr, o, p, d, i, u, s) {
   self.description=ko.observable(d);
   self.importance=ko.observable(i);
   self.uncertainty=ko.observable(u);
+  self.status=ko.observable(st);
   self.seq=s;
 
   self.select = function(e) {

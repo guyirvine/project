@@ -42,6 +42,7 @@ table.grid {
 table.grid td.description {
   width: 60%;
 }
+/*
 table.grid td.persona {
   width: 20%;
 }
@@ -51,3 +52,4 @@ table.grid td.outcome {
 table.grid td.backlog {
   width: 20%;
 }
+*/

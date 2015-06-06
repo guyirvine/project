@@ -1,4 +1,4 @@
-function HypothesisViewModel() {
+function ViewModel() {
   var self=this;
 
   self.last=null;
@@ -20,15 +20,19 @@ function HypothesisViewModel() {
     return self.current_project().name();
   });
 
+  self.status_list = ko.observableArray();
+  self.status_idx = {};
   self.outcome_list = ko.observableArray();
   self.outcome_idx = {};
   self.persona_list = ko.observableArray();
   self.persona_idx = {};
-  self.backlog_list = ko.observableArray();
-  self.backlog_idx = {};
   self.hypothesis_list = ko.observableArray();
   self.hypothesis_idx = {};
   self.list = ko.observableArray();
+
+  self.backlog_list = ko.computed(function() {
+    return _.filter( self.hypothesis_list(), function(el) {return el.status().id === Status.BACKLOG;});
+  });
 
   /****************************************************************************/
   self.new_backlogitem = function() {
@@ -70,11 +74,15 @@ function HypothesisViewModel() {
       seq = l[l.length-1].seq+1;
     }
 
-    var h = new Hypothesis(null, self.current_project(), null, null, null, 1, 1, seq);
+    var h = new Hypothesis(null, self.current_project(), null, null, null, 1, 1, null, seq);
     h.select();
   };
 
   /****************************************************************************/
+  self.add_status=function(s) {
+    self.status_list.push(s);
+    self.status_idx[s.id]=s;
+  };
   self.add_project=function(p) {
     self.project_list.push(p);
     self.project_idx[p.id]=p;
@@ -130,7 +138,7 @@ function HypothesisViewModel() {
 
   self.ret = function() {
     var c=self.last;
-    
+
     self.last=self.curr;
     self.curr=c;
     self._show( c );
@@ -152,8 +160,15 @@ function HypothesisViewModel() {
   };
 
   /****************************************************************************/
-  $.get('/project', function(project_list_data) {
-    _.each(JSON.parse( project_list_data ), function(el) {
+  $.when(
+    $.get('/status'),
+    $.get('/project')
+  ).done(function( status_data, project_list_data ) {
+    _.each(JSON.parse( status_data[0] ), function(el) {
+      self.add_status( new Status( Number(el.id), el.name ) );
+    });
+
+    _.each(JSON.parse( project_list_data[0] ), function(el) {
       self.add_project( new Project( el.id, el.name ) );
     });
     self.project_list()[0].select();

@@ -40,31 +40,13 @@ function DataAccess() {
   };
 
   /****************************************************************************/
-  self.update_backlog = function(b) {
-    data = {
-      project_id: b.project().id,
-      name: b.name(),
-      description: b.description(),
-      seq: b.seq
-    };
-
-    if ( b.id === null ) {
-      $.post( "/backlog", JSON.stringify(data), function(id) {
-        b.id=id;
-      });
-    } else {
-      $.post( "/backlog/" + b.id, JSON.stringify(data), function() {
-      });
-    }
-  };
-
-  /****************************************************************************/
   self.update_hypothesis = function(h) {
     data = {
       project_id: h.project().id,
       outcome_id: h.outcome().id,
       persona_id: h.persona().id,
       description: h.description(),
+      status_id: h.status().id,
       seq: h.seq
     };
 
@@ -85,24 +67,20 @@ function DataAccess() {
     }
     $.when(
       $.get('/project/' + id + '/outcome'),
-      $.get('/project/' + id + '/backlog'),
       $.get('/project/' + id + '/persona'),
       $.get('/project/' + id + '/hypothesis')
-    ).done(function( outcome_data, backlog_data, persona_data, hypothesis_data ) {
+    ).done(function( outcome_data, persona_data, hypothesis_data ) {
       vm.current_project( vm.project_idx[id] );
       vm.current_project().selected( true );
 
       vm.outcome_list.removeAll();
+      vm.add_outcome( new Outcome( null, vm.current_project(), "", "", 0 ) );
       _.each(JSON.parse( outcome_data[0] ), function(el) {
         vm.add_outcome( new Outcome( el.id, vm.current_project(), el.name, el.description, Number(el.seq) ) );
       });
 
-      vm.backlog_list.removeAll();
-      _.each(JSON.parse( backlog_data[0] ), function(el) {
-        vm.add_backlog( new Backlog( el.id, vm.current_project(), el.name, el.description, Number(el.seq) ) );
-      });
-
       vm.persona_list.removeAll();
+      vm.add_persona(new Persona( null, vm.current_project(), "", "", 0 ));
       _.each(JSON.parse( persona_data[0] ), function(el) {
         vm.add_persona(new Persona( el.id, vm.current_project(), el.name, el.role, Number(el.seq) ));
       });
@@ -111,8 +89,9 @@ function DataAccess() {
       _.each( JSON.parse( hypothesis_data[0] ), function(el) {
         var o=vm.outcome_idx[el.outcome_id];
         var p=vm.persona_idx[el.persona_id];
+        var st=vm.status_idx[el.status_id];
 
-        vm.add_hypothesis(new Hypothesis(el.id, vm.current_project(), o, p, el.description, Number(el.importance), Number(el.uncertainty), Number(el.seq)));
+        vm.add_hypothesis(new Hypothesis(el.id, vm.current_project(), o, p, el.description, Number(el.importance), Number(el.uncertainty), st, Number(el.seq)));
       });
     });
   };

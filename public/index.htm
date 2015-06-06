@@ -87,8 +87,8 @@
 				</thead>
 				<tbody data-bind='foreach: backlog_list'>
 					<tr data-bind='click: select'>
-						<td class='backlog' data-bind='text: name'></td>
 						<td class='description' data-bind='text: description'></td>
+						<td class='backlog' data-bind='text: outcome().name'></td>
 					</tr>
 				</tbody>
 				<tfoot>
@@ -193,30 +193,9 @@
 							<label>Uncertainty</label>
 							<input type='number' data-bind="value: uncertainty" min='1' max='3'></textarea>
 						</li>
-					</ul>
-				</div>
-
-				<div class='form-footer'>
-					<button type='submit' class='action close'>Done</button>
-				</div>
-			</form>
-		</section>
-
-
-		<section class='form backlog-form hide' data-bind="with: currentBacklogItem">
-			<form data-bind="submit: submit">
-				<div class='form-header'>
-				</div>
-
-				<div class='form-body'>
-					<ul>
-						<li class='name'>
-							<label>Name</label>
-							<input type='text' data-bind="value: name"></textarea>
-						</li>
-						<li class='description'>
-							<label>Description</label>
-							<textarea data-bind="value: description"></textarea>
+						<li>
+							<label>Status</label>
+							<select data-bind="options: vm.status_list,optionsText: 'name',value: status"></select>
 						</li>
 					</ul>
 				</div>
@@ -318,7 +297,7 @@
 
 		<script>
 			var da = new DataAccess();
-			var vm = new HypothesisViewModel();
+			var vm = new ViewModel();
 			ko.applyBindings(vm, $('div.body')[0]);
 			ko.applyBindings(vm, $('div.left')[0]);
 
