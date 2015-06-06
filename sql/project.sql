@@ -82,7 +82,9 @@ CREATE TABLE hypothesis_tbl (
     persona_id bigint NOT NULL,
     outcome_id bigint NOT NULL,
     description character varying NOT NULL,
-    seq integer NOT NULL
+    seq integer NOT NULL,
+    uncertainty integer DEFAULT 1 NOT NULL,
+    importance integer DEFAULT 1 NOT NULL
 );
 
 
@@ -201,9 +203,9 @@ SELECT pg_catalog.setval('hypothesis_seq', 2, true);
 -- Data for Name: hypothesis_tbl; Type: TABLE DATA; Schema: public; Owner: projectuser
 --
 
-COPY hypothesis_tbl (id, project_id, persona_id, outcome_id, description, seq) FROM stdin;
-1	1	1	2	Add complete a jpb	1
-2	1	1	1	Add uncertainty to hypothesis	2
+COPY hypothesis_tbl (id, project_id, persona_id, outcome_id, description, seq, uncertainty, importance) FROM stdin;
+2	1	1	1	Add uncertainty to hypothesis	2	1	1
+1	1	1	2	Completing a hypothesis	1	1	1
 \.
 
 
