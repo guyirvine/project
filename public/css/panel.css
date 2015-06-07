@@ -12,7 +12,8 @@
 }
 
 .hypothesis-panels .panel .title {
-	background-color: lightgrey;
+	background-color: #1e3466;
+	color: white;
 	padding: 0.5em 1em;
 }
 
