@@ -98,6 +98,16 @@ nav a {
 	font-size: 0.8em;
 }
 
+.side-menu a.new-project {
+  cursor: pointer;
+	padding: 0.5em 1em;
+	font-size: 0.8em;
+}
+
+.side-menu a.new-project:hover {
+  text-decoration: underline;
+}
+
 /******************************************************************************/
 div.body {
 	padding: 0;

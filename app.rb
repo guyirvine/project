@@ -34,6 +34,28 @@ get '/project/:id' do
   @db.queryForArray(sql, [params[:id]]).to_json
 end
 
+post '/project/:id' do
+  request.body.rewind
+  data = request.body.read
+  p = JSON.parse(data)
+
+  sql = 'UPDATE project_tbl SET name=? WHERE id = ?'
+  @db.execute(sql, [p['name'], params[:id]])
+end
+
+post '/project' do
+  request.body.rewind
+  data = request.body.read
+  p = JSON.parse(data)
+
+  sql = 'INSERT INTO project_tbl( id, name ) ' \
+          "VALUES ( NEXTVAL('project_seq'), ? )"
+  @db.execute(sql, [p['name']])
+
+  @db.queryForValue("SELECT CURRVAL( 'project_seq' )")
+end
+
+
 # *****************************************************************************
 get '/project/:id/outcome' do
   sql = 'SELECT id, name, description, seq FROM outcome_tbl WHERE project_id = ? ORDER BY seq'

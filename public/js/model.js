@@ -30,7 +30,36 @@ function Project(id, n) {
   self.selected=ko.observable(false);
 
   self.select = function() {
+    if ( vm.current_project() !== undefined ) {
+      vm.current_project().selected( false );
+    }
+    self.selected( true );
+
     vm.show_project( self.id );
+  };
+
+  self.select2 = function() {
+    if ( vm.current_project() !== undefined ) {
+      vm.current_project().selected( false );
+    }
+    self.selected( true );
+
+    vm.current_project( self );
+    vm.show("project-form");
+    $( 'section.project-form input' ).focus();
+  };
+
+  self.submit = function(e) {
+
+    da.update_project( self, function(id) {
+      console.log( 'project.submit. id: ', id, ', self.id: ', self.id );
+      if ( self.id === null ) {
+        console.log( 'project.submit. inside' );
+        self.id=id;
+        vm.add_project( self );
+      }
+      vm.show_project( id );
+    });
   };
 }
 
@@ -53,11 +82,12 @@ function Outcome(id, p, n, d, s) {
   self.submit = function(e) {
     vm.ret();
 
-    if ( self.id === null ) {
-      vm.add_outcome( self );
-    }
-
-    da.update_outcome( self );
+    da.update_outcome( self, function(id) {
+      if ( self.id === null ) {
+        self.id = id;
+        vm.add_outcome( self );
+      }
+    });
   };
 }
 
@@ -89,11 +119,12 @@ function Persona(id, p, n, r, s) {
   self.submit = function(e) {
     vm.ret();
 
-    if ( self.id === null ) {
-      vm.add_persona( self );
-    }
-
-    da.update_persona( self );
+    da.update_persona( self, function(id) {
+      if ( self.id === null ) {
+        self.id = id;
+        vm.add_persona( self );
+      }
+    });
   };
 }
 

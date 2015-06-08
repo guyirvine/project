@@ -48,6 +48,17 @@ function ViewModel() {
   });
 
   /****************************************************************************/
+  self.new_project = function() {
+    var l=self.project_list();
+    var seq=1;
+    if ( l.length > 0 ) {
+      seq = l[l.length-1].seq+1;
+    }
+
+    var p = new Project(null, "");
+    p.select2();
+  };
+
   self.new_outcome = function() {
     var l=self.outcome_list();
     var seq=1;
@@ -125,6 +136,8 @@ function ViewModel() {
 
   /****************************************************************************/
   self.show_project = function(id) {
+    console.log( 'show_project.id: ', id );
+
     da.get_for_project( id );
     self.show( "hypothesis-panels" );
   };

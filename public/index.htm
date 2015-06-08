@@ -15,11 +15,13 @@
 			<nav data-bind='foreach: project_list'>
 				<a data-bind='css: { selected: selected }, text: name, click: select'>Project</a>
 			</nav>
+			<a class='new-project' data-bind='click: new_project'>+1 More</a>
 		</div>
 
 		<div class='body pane'>
 		<header>
 			<nav>
+				<a name='project-form' class='project-form'>Details</a>
 				<a name='persona' class='persona persona-form'>Persona</a>
 				<a name='outcome' class='outcome outcome-form'>Outcome</a>
 				<a name='hypothesis-panels' class='hypothesis hypothesis-form hypothesis-panels'>Hypothesis</a>
@@ -201,6 +203,25 @@
 			</form>
 		</section>
 
+		<section class='form project-form hide' data-bind="with: current_project">
+			<form data-bind="submit: submit">
+				<div class='form-header'>
+				</div>
+
+				<div class='form-body'>
+					<ul>
+						<li class='name'>
+							<label>Name</label>
+							<input type='text' data-bind="value: name"></textarea>
+						</li>
+					</ul>
+				</div>
+
+				<div class='form-footer'>
+					<button type='submit' class='action close'>Done</button>
+				</div>
+			</form>
+		</section>
 
 		<section class='form outcome-form hide' data-bind="with: currentOutcome">
 			<form data-bind="submit: submit">

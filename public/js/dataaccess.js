@@ -2,7 +2,26 @@ function DataAccess() {
   var self = this;
 
   /****************************************************************************/
-  self.update_outcome = function(o) {
+  self.update_project = function(p, callback) {
+    data = {
+      name: p.name()
+    };
+
+    if ( p.id === null ) {
+      console.log( 'update_project.id: null' );
+      $.post( "/project", JSON.stringify(data), function(id) {
+        callback(id);
+      });
+    } else {
+      console.log( 'update_project.id: ', p.id );
+      $.post( "/project/" + p.id, JSON.stringify(data), function() {
+      });
+      callback(p.id);
+    }
+  };
+
+  /****************************************************************************/
+  self.update_outcome = function(o, callback) {
     data = {
       project_id: o.project().id,
       name: o.name(),
@@ -12,16 +31,17 @@ function DataAccess() {
 
     if ( o.id === null ) {
       $.post( "/outcome", JSON.stringify(data), function(id) {
-        o.id = id;
+        callback(id);
       });
     } else {
       $.post( "/outcome/" + o.id, JSON.stringify(data), function() {
+        callback(o.id);
       });
     }
   };
 
   /****************************************************************************/
-  self.update_persona = function(p) {
+  self.update_persona = function(p, callback) {
     data = {
       project_id: p.project().id,
       name: p.name(),
@@ -31,10 +51,11 @@ function DataAccess() {
 
     if ( p.id === null ) {
       $.post( "/persona", JSON.stringify(data), function(id) {
-        p.id = id;
+        callback(id);
       });
     } else {
       $.post( "/persona/" + p.id, JSON.stringify(data), function() {
+        callback(p.id);
       });
     }
   };

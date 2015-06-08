@@ -1,1 +1,1 @@
-DROP TABLE backlog_tbl;
+ALTER TABLE hypothesis_tbl ADD testing VARCHAR;
