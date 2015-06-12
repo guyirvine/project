@@ -1,2 +1,5 @@
 .vagrant/
+src/
+!src/github.com/guyirvine/project
+pkg/
 
