@@ -139,7 +139,8 @@ function ViewModel() {
     console.log( 'show_project.id: ', id );
 
     da.get_for_project( id );
-    self.show( "hypothesis-panels" );
+//    self.show( "hypothesis-panels" );
+    self.show( "outcome" );
   };
 
   self._show = function( c ) {
@@ -190,11 +191,11 @@ function ViewModel() {
     $.get('/project')
   ).done(function( status_data, project_list_data ) {
     _.each(JSON.parse( status_data[0] ), function(el) {
-      self.add_status( new Status( Number(el.id), el.name ) );
+      self.add_status( new Status( Number(el.Id), el.Name ) );
     });
 
     _.each(JSON.parse( project_list_data[0] ), function(el) {
-      self.add_project( new Project( el.id, el.name ) );
+      self.add_project( new Project( el.Id, el.Name ) );
     });
     self.project_list()[0].select();
   });

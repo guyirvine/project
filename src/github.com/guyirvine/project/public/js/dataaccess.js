@@ -98,25 +98,25 @@ function DataAccess() {
       vm.outcome_list.removeAll();
       vm.add_outcome( new Outcome( null, vm.current_project(), "", "", 0 ) );
       _.each(JSON.parse( outcome_data[0] ), function(el) {
-        vm.add_outcome( new Outcome( el.id, vm.current_project(), el.name, el.description, Number(el.seq) ) );
+        vm.add_outcome( new Outcome( el.Id, vm.current_project(), el.Name, el.Description, Number(el.Seq) ) );
       });
 
       vm.persona_list.removeAll();
       vm.add_persona(new Persona( null, vm.current_project(), "", "", 0 ));
       _.each(JSON.parse( persona_data[0] ), function(el) {
-        vm.add_persona(new Persona( el.id, vm.current_project(), el.name, el.role, Number(el.seq) ));
+        vm.add_persona(new Persona( el.Id, vm.current_project(), el.Name, el.Role, Number(el.Seq) ));
       });
 
       vm.hypothesis_list.removeAll();
       _.each( JSON.parse( hypothesis_data[0] ), function(el) {
-        var o=vm.outcome_idx[el.outcome_id];
-        var p=vm.persona_idx[el.persona_id];
-        var st=vm.status_idx[el.status_id];
+        var o=vm.outcome_idx[el.Outcome_id];
+        var p=vm.persona_idx[el.Persona_id];
+        var st=vm.status_idx[el.Status_id];
 
-        var i=vm.range_idx[el.importance];
-        var u=vm.range_idx[el.uncertainty];
+        var i=vm.range_idx[el.Importance];
+        var u=vm.range_idx[el.Uncertainty];
 
-        vm.add_hypothesis(new Hypothesis(el.id, vm.current_project(), o, p, el.description, el.testing, i, u, st, Number(el.seq)));
+        vm.add_hypothesis(new Hypothesis(el.Id, vm.current_project(), o, p, el.Description, el.Testing, i, u, st, Number(el.Seq)));
       });
     });
   };

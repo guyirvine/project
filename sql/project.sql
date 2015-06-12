@@ -39,25 +39,6 @@ CREATE SEQUENCE backlog_seq
 
 ALTER TABLE public.backlog_seq OWNER TO girvine;
 
-SET default_tablespace = '';
-
-SET default_with_oids = false;
-
---
--- Name: backlog_tbl; Type: TABLE; Schema: public; Owner: girvine; Tablespace: 
---
-
-CREATE TABLE backlog_tbl (
-    id bigint DEFAULT nextval('backlog_seq'::regclass) NOT NULL,
-    project_id bigint NOT NULL,
-    name character varying NOT NULL,
-    description character varying,
-    seq integer NOT NULL
-);
-
-
-ALTER TABLE public.backlog_tbl OWNER TO girvine;
-
 --
 -- Name: hypothesis_seq; Type: SEQUENCE; Schema: public; Owner: projectuser
 --
@@ -72,6 +53,10 @@ CREATE SEQUENCE hypothesis_seq
 
 ALTER TABLE public.hypothesis_seq OWNER TO projectuser;
 
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
 --
 -- Name: hypothesis_tbl; Type: TABLE; Schema: public; Owner: projectuser; Tablespace: 
 --
@@ -84,7 +69,9 @@ CREATE TABLE hypothesis_tbl (
     description character varying NOT NULL,
     seq integer NOT NULL,
     uncertainty integer DEFAULT 1 NOT NULL,
-    importance integer DEFAULT 1 NOT NULL
+    importance integer DEFAULT 1 NOT NULL,
+    status_id bigint DEFAULT 2,
+    testing character varying
 );
 
 
@@ -176,20 +163,23 @@ CREATE TABLE project_tbl (
 ALTER TABLE public.project_tbl OWNER TO projectuser;
 
 --
+-- Name: status_tbl; Type: TABLE; Schema: public; Owner: girvine; Tablespace: 
+--
+
+CREATE TABLE status_tbl (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    seq integer
+);
+
+
+ALTER TABLE public.status_tbl OWNER TO girvine;
+
+--
 -- Name: backlog_seq; Type: SEQUENCE SET; Schema: public; Owner: girvine
 --
 
 SELECT pg_catalog.setval('backlog_seq', 2, true);
-
-
---
--- Data for Name: backlog_tbl; Type: TABLE DATA; Schema: public; Owner: girvine
---
-
-COPY backlog_tbl (id, project_id, name, description, seq) FROM stdin;
-2	1	B2		2
-1	1	Add +1 More for Project		1
-\.
 
 
 --
@@ -203,9 +193,9 @@ SELECT pg_catalog.setval('hypothesis_seq', 2, true);
 -- Data for Name: hypothesis_tbl; Type: TABLE DATA; Schema: public; Owner: projectuser
 --
 
-COPY hypothesis_tbl (id, project_id, persona_id, outcome_id, description, seq, uncertainty, importance) FROM stdin;
-2	1	1	1	Add uncertainty to hypothesis	2	1	1
-1	1	1	2	Completing a hypothesis	1	1	1
+COPY hypothesis_tbl (id, project_id, persona_id, outcome_id, description, seq, uncertainty, importance, status_id, testing) FROM stdin;
+1	1	1	2	Completing a hypothesis	1	1	1	3	\N
+2	1	1	1	Add uncertainty to hypothesis	2	1	1	3	\N
 \.
 
 
@@ -260,11 +250,14 @@ COPY project_tbl (id, name) FROM stdin;
 
 
 --
--- Name: backlog_tbl_pkey; Type: CONSTRAINT; Schema: public; Owner: girvine; Tablespace: 
+-- Data for Name: status_tbl; Type: TABLE DATA; Schema: public; Owner: girvine
 --
 
-ALTER TABLE ONLY backlog_tbl
-    ADD CONSTRAINT backlog_tbl_pkey PRIMARY KEY (id);
+COPY status_tbl (id, name, seq) FROM stdin;
+1	Backlog	1
+2	Open	2
+3	Closed	3
+\.
 
 
 --
@@ -300,11 +293,11 @@ ALTER TABLE ONLY project_tbl
 
 
 --
--- Name: backlog_project_fk; Type: FK CONSTRAINT; Schema: public; Owner: girvine
+-- Name: status_tbl_pkey; Type: CONSTRAINT; Schema: public; Owner: girvine; Tablespace: 
 --
 
-ALTER TABLE ONLY backlog_tbl
-    ADD CONSTRAINT backlog_project_fk FOREIGN KEY (project_id) REFERENCES project_tbl(id);
+ALTER TABLE ONLY status_tbl
+    ADD CONSTRAINT status_tbl_pkey PRIMARY KEY (id);
 
 
 --
@@ -329,6 +322,14 @@ ALTER TABLE ONLY hypothesis_tbl
 
 ALTER TABLE ONLY hypothesis_tbl
     ADD CONSTRAINT hypothesis_project_fk FOREIGN KEY (project_id) REFERENCES project_tbl(id);
+
+
+--
+-- Name: hypothesis_status_fk; Type: FK CONSTRAINT; Schema: public; Owner: projectuser
+--
+
+ALTER TABLE ONLY hypothesis_tbl
+    ADD CONSTRAINT hypothesis_status_fk FOREIGN KEY (status_id) REFERENCES status_tbl(id);
 
 
 --

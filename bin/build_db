@@ -1,0 +1,7 @@
+#!/bin/bash
+
+createdb project
+psql -f sql/project.sql project
+psql -f sql/create_tables.sql project
+psql -f sql/seed.sql project
+

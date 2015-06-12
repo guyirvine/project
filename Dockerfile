@@ -6,44 +6,36 @@ RUN echo "Install packages" \
   && export DEBIAN_FRONTEND=noninteractive \
   && apt-get -y update \
   && apt-get install -y \
-      ruby \
-      ruby-dev \
-      nodejs \
-      npm \
-      git-core \
-      libpq-dev
+      git \
+      wget
 
 RUN echo "Setup locales" \
   && localedef -c -i en_NZ -f UTF-8 en_NZ.UTF-8 \
   && update-locale LANG=en_NZ.UTF-8
-
-#RUN echo "Create user" \
-#  && mkdir -p /opt/project/ \
-#  && groupadd --gid 1000 puser \
-#  && useradd -m --home /home/puser --uid 1000 --gid puser --shell /bin/sh puser
-
-RUN echo "Install required" \
-  && gem install bundler \
-  && npm install -g bower
 
 RUN echo "Cleaning up" \
   && apt-get autoremove -y \
   && apt-get clean -y \
   && rm -rf /var/lib/apt/lists/*
 
+ENV GO_VERSION 1.4.2
+
+RUN echo 'Downloading go1.4.2.linux-amd64.tar.gz' \
+  && wget -q https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz \
+  && echo 'Unpacking go language' \
+  && tar -C /usr/local -xzf go1.4.2.linux-amd64.tar.gz
+
+ENV GOPATH=/opt/project
+ENV PATH=$PATH:/opt/project/bin:/usr/local/go/bin
+
 COPY . /opt/project/
 
-#USER fpuser
+WORKDIR /opt/project/src/github.com/guyirvine/project
 
-WORKDIR /opt/project/
+RUN go install
 
-# Leaving in the node / bower commands as they will no doubt prove useful ...
+ENV DB "user=vagrant dbname=project password=vagrant host=10.0.2.15"
 
-#RUN /bin/ln -s /usr/bin/nodejs /usr/bin/node
+EXPOSE 5001
 
-RUN bundle install --without test development
-
-EXPOSE 5000
-
-# ENTRYPOINT ["bundle", "exec", "ruby", "app.rb", "-o", "0.0.0.0", "-p", "5000"]
-ENTRYPOINT ["ruby", "app.rb", "-o", "0.0.0.0", "-p", "5000"]
+ENTRYPOINT ["project"]

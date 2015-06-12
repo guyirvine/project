@@ -1,0 +1,4 @@
+#!/bin/bash
+dropdb project
+build_db
+

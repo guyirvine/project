@@ -1,0 +1,2 @@
+DB="user=vagrant dbname=project password=vagrant host=0.0.0.0" go run project.go
+
