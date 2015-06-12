@@ -35,7 +35,7 @@ WORKDIR /opt/project/src/github.com/guyirvine/project
 RUN go get \
   && go install
 
-ENV DB "user=vagrant dbname=project password=vagrant host=10.0.2.15"
+ENV DB "user=vagrant dbname=project password=vagrant host=172.17.42.1"
 
 EXPOSE 5001
 
