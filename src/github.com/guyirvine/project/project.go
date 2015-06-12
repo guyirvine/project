@@ -319,7 +319,7 @@ fmt.Println( "Here" )
       s, _ := json.Marshal(tuples)
       fmt.Fprintf(w, "%s\n", s)
 
-  })
+  }).Methods("GET")
 
   r.HandleFunc("/project/{id}", func(w http.ResponseWriter, r *http.Request) {
     vars := mux.Vars(r)
@@ -385,7 +385,7 @@ fmt.Println( "Here" )
 
     var id IdTuple
     db.Get(&id, "SELECT CURRVAL( 'project_seq' ) AS id")
-    fmt.Fprintf(w, "%s", id.Id)
+    fmt.Fprintf(w, "%d", id.Id)
 
     tx.Commit()
 
