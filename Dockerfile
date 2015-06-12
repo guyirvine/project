@@ -32,7 +32,8 @@ COPY . /opt/project/
 
 WORKDIR /opt/project/src/github.com/guyirvine/project
 
-RUN go install
+RUN go get \
+  && go install
 
 ENV DB "user=vagrant dbname=project password=vagrant host=10.0.2.15"
 
