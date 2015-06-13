@@ -167,7 +167,7 @@
 				<div class='form-body'>
 					<div class='description'>
 						<label>Hypothesis</label>
-						<textarea data-bind="value: description"></textarea>
+						<textarea class='description' data-bind="value: description"></textarea>
 					</div>
 					<div class='testing'>
 						<label>Testing</label>
@@ -287,7 +287,7 @@
 			<div class='form-body'>
 				<ul>
 					<li>
-						<textarea data-bind="value: description"></textarea>
+						<textarea class='description' data-bind="value: description"></textarea>
 					</li>
 					<li>
 						<label>Persona: </label>
@@ -326,11 +326,11 @@
 			$( "header nav a" ).click( function(e) {
 				if ( e.currentTarget.name == "hide-sidebar" ) {
 					$( "body" ).addClass( "hide-sidebar")
-				}
-				if ( e.currentTarget.name == "show-sidebar" ) {
+				} else if ( e.currentTarget.name == "show-sidebar" ) {
 					$( "body" ).removeClass( "hide-sidebar")
+				} else {
+					vm.show( e.currentTarget.name );
 				}
-				vm.show( e.currentTarget.name );
 			});
 
 		</script>

@@ -139,8 +139,8 @@ function ViewModel() {
     console.log( 'show_project.id: ', id );
 
     da.get_for_project( id );
-//    self.show( "hypothesis-panels" );
-    self.show( "outcome" );
+    self.show( "hypothesis-panels" );
+//    self.show( "outcome" );
   };
 
   self._show = function( c ) {

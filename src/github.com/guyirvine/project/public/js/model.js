@@ -146,7 +146,7 @@ function Hypothesis(id, pr, o, p, d, t, i, u, st, s) {
   self.select = function(e) {
     vm.show("hypothesis-form");
     vm.currentHypothesis( self );
-    $( 'section.hypothesis-form textarea' ).focus();
+    $( 'section.hypothesis-form textarea.description' ).focus();
   };
 
   self.submit = function(e) {
