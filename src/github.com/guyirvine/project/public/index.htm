@@ -21,6 +21,8 @@
 		<div class='body pane'>
 		<header>
 			<nav>
+				<a name='hide-sidebar' class='hide-sidebar'>&lt;&lt;&lt;</a>
+				<a name='show-sidebar' class='show-sidebar'>&gt;&gt;&gt;</a>
 				<a name='project-form' class='project-form'>Details</a>
 				<a name='persona' class='persona persona-form'>Persona</a>
 				<a name='outcome' class='outcome outcome-form'>Outcome</a>
@@ -322,6 +324,12 @@
 		  };
 
 			$( "header nav a" ).click( function(e) {
+				if ( e.currentTarget.name == "hide-sidebar" ) {
+					$( "body" ).addClass( "hide-sidebar")
+				}
+				if ( e.currentTarget.name == "show-sidebar" ) {
+					$( "body" ).removeClass( "hide-sidebar")
+				}
 				vm.show( e.currentTarget.name );
 			});
 

@@ -139,3 +139,25 @@ a.action:hover {
 
 footer {
 }
+
+body.hide-sidebar div.left {
+  display: none;
+}
+
+body.hide-sidebar div.body {
+  left: 3em;
+}
+
+.body header nav a.show-sidebar {
+  display: none;
+}
+body.hide-sidebar .body header nav a.show-sidebar {
+  display: inline-block;
+}
+
+.body header nav a.hide-sidebar {
+  display: inline-block;
+}
+body.hide-sidebar .body header nav a.hide-sidebar {
+  display: none;
+}
