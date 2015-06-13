@@ -72,7 +72,7 @@ func main() {
   }
   defer db.Close()
 
-fmt.Println( "Here" )
+  fmt.Println( "Starting up" )
 
   /************************************************************************/
   r := mux.NewRouter()
@@ -93,12 +93,10 @@ fmt.Println( "Here" )
 
   /************************************************************************/
   r.HandleFunc("/project/{id}/outcome", func(w http.ResponseWriter, r *http.Request) {
-    fmt.Println("project.outcome.1")
     vars := mux.Vars(r)
 
     tuples := []OutcomeTuple{}
       var sql = `SELECT id, name, description, seq FROM outcome_tbl WHERE project_id=$1 ORDER BY seq`
-      fmt.Println("project.outcome.1. $1", vars["id"])
       db.Select(&tuples, sql, vars["id"])
       s, _ := json.Marshal(tuples)
       fmt.Fprintf(w, "%s\n", s)
@@ -235,8 +233,6 @@ fmt.Println( "Here" )
   /************************************************************************/
   r.HandleFunc("/project/{id}/hypothesis", func(w http.ResponseWriter, r *http.Request) {
     vars := mux.Vars(r)
-
-    fmt.Println( "/project/{id}/hypothesis.1 ", vars["id"] )
 
     tuples := []HypothesisTuple{}
 
@@ -398,7 +394,6 @@ fmt.Println( "Here" )
   http.Handle("/", r)
   fmt.Println( http.ListenAndServe("0.0.0.0:5001", nil) )
 
-fmt.Println( "Here.End" )
 }
 
 /************************************************************************/
