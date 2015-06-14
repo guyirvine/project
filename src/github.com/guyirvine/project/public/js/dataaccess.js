@@ -97,21 +97,22 @@ function DataAccess() {
 
       vm.outcome_list.removeAll();
       vm.add_outcome( new Outcome( null, vm.current_project(), "", "", 0 ) );
+      console.log( "outcome_data[0]: ", outcome_data[0] );
       _.each(JSON.parse( outcome_data[0] ), function(el) {
-        vm.add_outcome( new Outcome( el.Id, vm.current_project(), el.Name, el.Description, Number(el.Seq) ) );
+        vm.add_outcome( new Outcome( el.ID, vm.current_project(), el.Name, el.Description, Number(el.Seq) ) );
       });
 
       vm.persona_list.removeAll();
       vm.add_persona(new Persona( null, vm.current_project(), "", "", 0 ));
       _.each(JSON.parse( persona_data[0] ), function(el) {
-        vm.add_persona(new Persona( el.Id, vm.current_project(), el.Name, el.Role, Number(el.Seq) ));
+        vm.add_persona(new Persona( el.ID, vm.current_project(), el.Name, el.Role, Number(el.Seq) ));
       });
 
       vm.hypothesis_list.removeAll();
       _.each( JSON.parse( hypothesis_data[0] ), function(el) {
-        var o=vm.outcome_idx[el.Outcome_id];
-        var p=vm.persona_idx[el.Persona_id];
-        var st=vm.status_idx[el.Status_id];
+        var o=vm.outcome_idx[el.OutcomeID];
+        var p=vm.persona_idx[el.PersonaID];
+        var st=vm.status_idx[el.StatusID];
 
         var i=vm.range_idx[el.Importance];
         var u=vm.range_idx[el.Uncertainty];

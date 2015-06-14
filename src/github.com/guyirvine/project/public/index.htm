@@ -32,7 +32,34 @@
 			</nav>
 		</header>
 
+
+<style>
+	section h4 {
+		margin: 0;
+	}
+	section li {
+		list-style: none;
+		margin-bottom: 1.5em;
+		cursor: pointer;
+	}
+	section li div {
+		border-left: 3px solid green;
+		padding: 6px 9px;
+	}
+</style>
 		<section class='persona hide'>
+			<ul data-bind='foreach: persona_display_list'>
+				<li data-bind='click: select'>
+					<h4 data-bind='text: name'></h4>
+					<div>
+						<span  data-bind='text: role'></span>
+					</div>
+				</li>
+			</ul>
+			<a class='action' data-bind='click: new_persona'>+1 More</a>
+		</section>
+
+		<section class='persona2 hide'>
 			<table class='grid'>
 				<thead>
 					<tr>
@@ -58,6 +85,19 @@
 		</section>
 
 		<section class='outcome hide'>
+			<ul data-bind='foreach: outcome_display_list'>
+				<li data-bind='click: select'>
+					<h4 data-bind='text: name'></h4>
+					<div>
+						<span  data-bind='text: description'></span>
+					</div>
+				</li>
+			</ul>
+			<a class='action' data-bind='click: new_outcome'>+1 More</a>
+		</section>
+
+
+		<section class='outcome2 hide'>
 			<table class='grid'>
 				<thead>
 					<tr>
