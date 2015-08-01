@@ -1,5 +1,9 @@
 .vagrant/
-src/
-!src/github.com/guyirvine/project
+src/github.com/golang/
+src/github.com/gorilla/
+src/github.com/jmoiron/
+src/github.com/lib/
+src/github.com/nsf/
+src/golang.org/
 pkg/
 

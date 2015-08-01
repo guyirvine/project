@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
+	</head>
+	<style>
+    .hide {
+      display: none;
+    }
+
+    h2.stream, div.item {
+      font-family: chalkduster;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th {
+      text-align: left;
+    }
+    td, th {
+      padding: 6px 9px;
+    }
+
+		h2.stream {
+      background-color: #56C4E8;
+      color: black;
+      display: inline-block;
+      padding: 6px 9px;
+      box-shadow: 3px 2px 5px #888888;
+      margin: 1px 1px;
+      width: 8em;
+/*
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+*/
+      font-size: 0.8em;
+      cursor: pointer;
+    }
+
+
+    div.item {
+      background-color: #FFDF25;
+      color: black;
+      display: inline-block;
+      padding: 6px 9px;
+      box-shadow: 3px 2px 5px #888888;
+      margin: 1px 1px;
+      width: 8em;
+/*
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+*/
+      font-size: 0.8em;
+      cursor: pointer;
+    }
+
+    div.item-pink {
+      background-color: #EF5AA1;
+    }
+    div.item-purple {
+      background-color: #AE86BC;
+    }
+    div.item-blue {
+      background-color: #56C4E8;
+    }
+    div.item-orange {
+      background-color: #FAA457;
+    }
+    div.item-green {
+      background-color: #89B18C;
+    }
+
+    div.item-yellow {
+      background-color: #FFDF25;
+    }
+
+    div.item-blue {
+      background-color: #82ACB8;
+    }
+
+    div.item-silver {
+      background-color: #8A8FA3;
+    }
+
+    div.currentItem {
+      box-shadow: 3px 2px 5px #333;
+    }
+
+    table th {
+      width: 30%;
+    }
+    table th.stream {
+      width: 10%;
+    }
+
+    div.currentItemPanel {
+      position: fixed;
+      bottom: 1em;
+      left: 1em;
+      height: 12em;
+      padding: 6px 9px;
+      min-width: 25em;
+      border: none;
+      margin: 3px;
+      box-shadow: 3px 2px 5px #888888;
+    }
+
+    div.currentItemPanel div.status span {
+      font-weight: bold;
+    }
+
+    div.currentItemPanel div.note {
+      position: absolute;
+      bottom: 0;
+      right: 0.7em;
+    }
+
+    h2, h3 {
+      font-weight: normal;
+    }
+
+		h2 {
+			font-size: 1em;
+		}
+
+    div.currentItemPanel h2 {
+      font-family: chalkduster;
+    }
+
+    div.currentItemPanel ul {
+      position: absolute;
+      bottom: 0.1em;
+      left: 0.7em;
+      padding: 0;
+      margin: 0;
+    }
+
+    div.currentItemPanel ul li {
+      list-style: none;
+      display: inline-block;
+    }
+
+    div.currentItemPanel ul li:nth-child(2):after {
+      content: ' | ';
+    }
+
+    div.currentItemPanel ul li.hide {
+      display: none;
+    }
+
+    .action a {
+      text-decoration: none;
+    }
+
+    div.note {
+      font-size: 0.8em;
+    }
+
+    th.alert {
+      color: red;
+    }
+
+		td.droptarget {
+			border: 1px dashed black;
+		}
+
+		tr.stream td {
+			padding-bottom: 1em;
+		}
+
+		div.newitem {
+			font-size: 0.8em;
+		}
+	</style>
+	<script>
+	var t1,t2;
+	function allowDrop(ev) {
+	  ev.preventDefault();
+		var t = $( ev.target );
+		if ( t !== t1 ) {
+			console.log( t1 );
+			t1 = t;
+
+			t.addClass( 'droptarget' );
+		}
+	}
+
+	function leaveDrop(ev) {
+	  ev.preventDefault();
+		var t = $( ev.target );
+		if ( t !== t2 ) {
+			console.log( t2 );
+			t2 = t;
+
+			t.removeClass( 'droptarget' );
+		}
+	}
+
+	function drag(ev) {
+	    ev.dataTransfer.setData("text", ev.target.id);
+	}
+
+	var t,d,item;
+
+	function drop(ev) {
+	    ev.preventDefault();
+
+	    var data = ev.dataTransfer.getData("text");
+			t = $( ev.target );
+			t.removeClass( 'droptarget' );
+
+			d = document.getElementById(data);
+			console.log( d );
+			var id=d.id.substring(4);
+			if ( id === "new" ) {
+				var dropStreamId = t[0].parentNode.id.substring( 6 );
+				var stream = vm.board.streamIdx[dropStreamId];
+
+				var newId = 100;
+				item = new Item( newId, '', Status.TODO, stream );
+	      vm.board.addItem( stream, item );
+			} else {
+				item = vm.board.itemIdx[d.id.substring(4)];
+			}
+
+			if ( t.hasClass( "Status.TODO" ) ) {
+				item.setStatusToDo();
+			} else if ( t.hasClass( "Status.DOING" ) ) {
+				item.setStatusDoing();
+			} else if ( t.hasClass( "Status.DONE" ) ) {
+				item.setStatusDone();
+			} else {
+				console.log( "Requested status does not exist: " + s );
+			}
+
+			var dropStreamId = t[0].parentNode.id.substring( 6 );
+			if ( item.stream.id !==  Number(dropStreamId) ) {
+				vm.board.moveStream( item, dropStreamId );
+				console.log( "Move", item.stream.id, dropStreamId );
+			}
+
+
+//			var stream = t[0].parent();
+//			console.log( stream.id );
+		}
+
+		function updateItemText( ev ) {
+			item = vm.board.itemIdx[ev.target.id.substring(4)];
+			item.l( ev.target.innerText );
+		}
+
+		function updateStreamText( ev ) {
+			var stream = vm.board.streamIdx[ev.target.id.substring(6)];
+			stream.l( ev.target.innerText );
+		}
+	</script>
+	<body>
+    <div data-bind="with: board">
+      <table>
+        <thead>
+          <tr>
+            <th class="stream"><div draggable="true" class="item newitem" id="itemnew" ondragstart="drag(event)">&nbsp;</div></th>
+            <th>To Do</th>
+            <th data-bind='css: { alert: doingCount() > 1 }'>Doing</th>
+            <th>Done</th>
+          </tr>
+        </thead>
+        <tbody data-bind="foreach: streams">
+          <tr data-bind="attr: { id: 'stream' + id }, allowDrop: allowDrop" class="stream">
+            <td><h2 onblur="updateStreamText(event)" contenteditable="true" data-bind="text: l,attr: { id: 'stream' + id }" class="stream">Stream</h2></td>
+            <td data-bind="foreach: todo" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" class='Status.TODO'>
+              <div class='item' onblur="updateItemText(event)" contenteditable="true" draggable="true" ondragstart="drag(event)" data-bind="attr: { id: 'item' + id },css: { currentItem: isCurrentItem }, text: l, click: click">Item 1.1</div>
+            </td>
+            <td data-bind="foreach: doing" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" class='Status.DOING'>
+              <div class='item' onblur="updateItemText(event)" contenteditable="true" draggable="true" ondragstart="drag(event)" data-bind="attr: { id: 'item' + id },css: { currentItem: isCurrentItem }, text: l, click: click">Item 1.1</div>
+            </td>
+            <td data-bind="foreach: done" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" class='Status.DONE'>
+              <div class='item' onblur="updateItemText(event)" contenteditable="true" draggable="true" ondragstart="drag(event)" data-bind="attr: { id: 'item' + id },css: { currentItem: isCurrentItem }, text: l, click: click">Item 1.1</div>
+            </td>
+          </tr>
+        </tbody>
+				<tfoot>
+					<tr class="stream">
+						<td><h2><a id="streamnew" class='action' data-bind='click: createstream'>Create Stream</a></h2></td>
+					</tr>
+				</tfoot>
+      </table>
+
+      <div class="currentItemPanel item-yellow hide" data-bind="with: currentItem">
+        <h2 data-bind="text: l"></h2>
+
+        <ul class='action'>
+          <li data-bind="css: { hide: s() !== Status.TODO }"><a href='doing' data-bind="click: setStatusDoing">Move to Doing</a></li>
+
+          <li data-bind="css: { hide: s() !== Status.DOING }"><a href='todo' data-bind="click: setStatusToDo">Move Back to ToDo</a></li>
+          <li data-bind="css: { hide: s() !== Status.DOING }"><a href='done' data-bind="click: setStatusDone">Move to Done</a></li>
+
+          <li data-bind="css: { hide: s() !== Status.DONE }"><a href='doing' data-bind="click: setStatusDoing">Move Back to Doing</a></li>
+        </ul>
+
+        <div class='note'>
+          <div class="status" data-bind="with: s">Current Status is <span data-bind="text: name">Status Name</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+	  <script src="bower_components/knockout/dist/knockout.js"></script>
+	  <script src="bower_components/lodash/lodash.min.js"></script>
+    <script>
+      function Status( id, name ) {
+        var self = this;
+
+        self.id = id;
+        self.name = name;
+      }
+      Status.TODO = new Status( 1, 'ToDo' );
+      Status.DOING = new Status( 2, 'Doing' );
+      Status.DONE = new Status( 3, 'Done' );
+
+      function Item( id, l, s, stream ) {
+        var self = this;
+				self.id = id;
+        self.l = ko.observable( l );
+        self.s = ko.observable( s );
+				self.stream = stream;
+
+        self.click = function() {
+          vm.board.currentItem( self );
+        }
+
+        self.setStatus = function( s ) {
+          self.s( s );
+        }
+        self.setStatusToDo = function() {
+          self.setStatus( Status.TODO );
+        }
+        self.setStatusDoing = function() {
+          self.setStatus( Status.DOING );
+        }
+        self.setStatusDone = function() {
+          self.setStatus( Status.DONE );
+        }
+
+        self.isCurrentItem = ko.computed( function() { return self == vm.board.currentItem() })
+      }
+
+      function Stream( id, l ) {
+        var self = this;
+				self.id = id;
+        self.l = ko.observable(l);
+        self.items = ko.observableArray();
+
+        self.todo = ko.computed( function() {
+          return _.filter( self.items(), function(el) {
+            return el.s() === Status.TODO;
+          });
+        });
+
+        self.doing = ko.computed( function() {
+          return _.filter( self.items(), function(el) {
+            return el.s() === Status.DOING;
+          });
+        });
+
+        self.done = ko.computed( function() {
+          return _.filter( self.items(), function(el) {
+            return el.s() === Status.DONE;
+          });
+        });
+
+        self.addItem = function( i ) {
+          self.items.push( i );
+					i.stream = self;
+        }
+				self.removeItem = function( i ) {
+					self.items.remove( i );
+				}
+
+				self.allowDrop = function() {
+					console.log( "allowDrop" );
+				}
+      }
+
+      function Board() {
+        var self = this;
+				self.itemIdx = {};
+        self.streams = ko.observableArray();
+				self.streamIdx = {};
+
+        self.currentItem = ko.observable();
+
+        self.doingCount = ko.computed( function() {
+          return _.reduce( self.streams(), function( total, el ) {
+            return total + el.doing().length }, 0 );
+          });
+
+				self.addStream = function( s ) {
+					self.streams.push( s );
+					self.streamIdx[s.id] = s;
+				}
+				self.addItem = function( s, i ) {
+					self.streamIdx[s.id].addItem( i );
+					self.itemIdx[i.id] = i;
+        }
+				self.moveStream = function( item, dropStreamId ) {
+					item.stream.removeItem( item );
+
+					var newStream = self.streamIdx[dropStreamId];
+					newStream.addItem( item );
+				}
+
+				self.createstream = function() {
+					vm.addStream( 3, '' );
+				}
+      }
+
+      function ViewModel() {
+        var self = this;
+        self.board = new Board();
+
+        self.addStream = function( id, s ) {
+          var s = new Stream( id, s );
+          self.board.addStream( s );
+          return s;
+        }
+
+      }
+
+      var vm = new ViewModel();
+      ko.applyBindings( vm );
+
+			var b = vm.board;
+      var s = vm.addStream( 1, 'Stream 1' );
+      b.addItem( s, new Item( 1, 'Item 1.1', Status.TODO, s ) );
+      b.addItem( s, new Item( 2, 'Item 1.2', Status.TODO, s ) );
+      b.addItem( s, new Item( 3, 'Item 1.3 - With Extra Text', Status.DOING, s ) );
+      b.addItem( s, new Item( 4, 'Item 1.4', Status.DONE, s ) );
+
+      var s2 = vm.addStream( 2, 'Stream 2' );
+      b.addItem( s2, new Item( 5, 'Item 2.1', Status.TODO, s2 ) );
+      b.addItem( s2, new Item( 6, 'Item 2.2', Status.TODO, s2 ) );
+      b.addItem( s2, new Item( 7, 'Item 2.3 - With Extra Text', Status.DOING, s2 ) );
+      b.addItem( s2, new Item( 8, 'Item 2.4', Status.DONE, s2 ) );
+
+    </script>
+  </body>
+</html>
