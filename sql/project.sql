@@ -70,8 +70,8 @@ CREATE TABLE hypothesis_tbl (
     seq integer NOT NULL,
     uncertainty integer DEFAULT 1 NOT NULL,
     importance integer DEFAULT 1 NOT NULL,
-    status_id bigint DEFAULT 2,
-    testing character varying
+    status_id bigint DEFAULT 2 NOT NULL,
+    testing character varying DEFAULT ''::character varying NOT NULL
 );
 
 
@@ -99,7 +99,7 @@ CREATE TABLE outcome_tbl (
     id bigint DEFAULT nextval('outcome_seq'::regclass) NOT NULL,
     project_id bigint NOT NULL,
     name character varying NOT NULL,
-    description character varying,
+    description character varying DEFAULT ''::character varying NOT NULL,
     seq integer NOT NULL
 );
 
@@ -129,7 +129,7 @@ CREATE TABLE persona_tbl (
     project_id bigint NOT NULL,
     name character varying NOT NULL,
     role character varying NOT NULL,
-    description character varying,
+    description character varying DEFAULT ''::character varying NOT NULL,
     seq integer NOT NULL
 );
 
@@ -194,8 +194,8 @@ SELECT pg_catalog.setval('hypothesis_seq', 2, true);
 --
 
 COPY hypothesis_tbl (id, project_id, persona_id, outcome_id, description, seq, uncertainty, importance, status_id, testing) FROM stdin;
-1	1	1	2	Completing a hypothesis	1	1	1	3	\N
-2	1	1	1	Add uncertainty to hypothesis	2	1	1	3	\N
+1	1	1	2	Completing a hypothesis	1	1	1	3	
+2	1	1	1	Add uncertainty to hypothesis	2	1	1	3	
 \.
 
 
@@ -211,8 +211,8 @@ SELECT pg_catalog.setval('outcome_seq', 2, true);
 --
 
 COPY outcome_tbl (id, project_id, name, description, seq) FROM stdin;
-1	1	Remote Management	\N	1
 2	1	Visualise Workflow		2
+1	1	Remote Management		1
 \.
 
 
@@ -228,8 +228,8 @@ SELECT pg_catalog.setval('persona_seq', 2, true);
 --
 
 COPY persona_tbl (id, project_id, name, role, description, seq) FROM stdin;
-1	1	Guy	Decision Maker	\N	1
-2	1	Angus	Programmer	\N	2
+1	1	Guy	Decision Maker		1
+2	1	Angus	Programmer		2
 \.
 
 
