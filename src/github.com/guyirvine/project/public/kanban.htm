@@ -323,12 +323,13 @@
       Status.TODO = new Status( 1, 'ToDo' );
       Status.DOING = new Status( 2, 'Doing' );
       Status.DONE = new Status( 3, 'Done' );
+			Status.idx = [null, Status.TODO, Status.DOING, Status.DONE]
 
       function Item( id, l, s, stream ) {
         var self = this;
 				self.id = id;
         self.l = ko.observable( l );
-        self.s = ko.observable( s );
+        self.s = ko.observable( Status.idx[s] );
 				self.stream = stream;
 
         self.click = function() {
@@ -437,17 +438,21 @@
       ko.applyBindings( vm );
 
 			var b = vm.board;
-      var s = vm.addStream( 1, 'Stream 1' );
-      b.addItem( s, new Item( 1, 'Item 1.1', Status.TODO, s ) );
-      b.addItem( s, new Item( 2, 'Item 1.2', Status.TODO, s ) );
-      b.addItem( s, new Item( 3, 'Item 1.3 - With Extra Text', Status.DOING, s ) );
-      b.addItem( s, new Item( 4, 'Item 1.4', Status.DONE, s ) );
 
-      var s2 = vm.addStream( 2, 'Stream 2' );
-      b.addItem( s2, new Item( 5, 'Item 2.1', Status.TODO, s2 ) );
-      b.addItem( s2, new Item( 6, 'Item 2.2', Status.TODO, s2 ) );
-      b.addItem( s2, new Item( 7, 'Item 2.3 - With Extra Text', Status.DOING, s2 ) );
-      b.addItem( s2, new Item( 8, 'Item 2.4', Status.DONE, s2 ) );
+			$.getJSON( "stream", function( stream_list ) {
+				_.each( stream_list, function(stream) {
+					vm.addStream( stream.ID, stream.Name );
+				});
+
+				$.getJSON( "task", function( list ) {
+					_.each( list, function(el) {
+						console.log( el );
+						var s = b.streamIdx[el.StreamID];
+						b.addItem( s, new Item( el.ID, el.Name, el.StatusID, s ) );
+					});
+				});
+
+			});
 
     </script>
   </body>

@@ -62,6 +62,19 @@ type hypothesisTuple struct {
 	Seq         int
 }
 
+type streamTuple struct {
+	ID   int
+	Name string
+}
+
+type taskTuple struct {
+	ID   int
+	StreamID int
+	StatusID int
+	Name string
+}
+
+
 func main() {
 
 	/************************************************************************/
@@ -381,6 +394,143 @@ func main() {
 
 		var id idTuple
 		db.Get(&id, "SELECT CURRVAL( 'project_seq' ) AS id")
+		fmt.Fprintf(w, "%d", id.ID)
+
+		tx.Commit()
+
+	}).Methods("POST")
+
+
+	/************************************************************************/
+	r.HandleFunc("/stream", func(w http.ResponseWriter, r *http.Request) {
+		tuples := []streamTuple{}
+		var sql = `SELECT id, name
+                 FROM stream_tbl`
+		db.Select(&tuples, sql)
+		s, _ := json.Marshal(tuples)
+		fmt.Fprintf(w, "%s\n", s)
+
+	}).Methods("GET")
+
+	r.HandleFunc("/stream/{id}", func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+
+		//Read POST body
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		//Parse POST body
+		decoder := json.NewDecoder(bytes.NewBuffer(body))
+		var p streamTuple
+		err = decoder.Decode(&p)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		//Write to DB
+		tx := db.MustBegin()
+		tx.MustExec("UPDATE stream_tbl SET name = $1 WHERE id = $2", p.Name, vars["id"])
+
+		tx.Commit()
+
+	}).Methods("POST")
+
+	r.HandleFunc("/stream", func(w http.ResponseWriter, r *http.Request) {
+		//Read POST body
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		//Parse POST body
+		decoder := json.NewDecoder(bytes.NewBuffer(body))
+		var p streamTuple
+		err = decoder.Decode(&p)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		//Write to DB
+		tx := db.MustBegin()
+		var sql = "INSERT INTO stream_tbl( id, name ) VALUES ( NEXTVAL( 'stream_seq' ), $1 )"
+		tx.MustExec(sql, p.Name)
+
+		var id idTuple
+		db.Get(&id, "SELECT CURRVAL( 'stream_seq' ) AS id")
+		fmt.Fprintf(w, "%d", id.ID)
+
+		tx.Commit()
+
+	}).Methods("POST")
+
+	/************************************************************************/
+	r.HandleFunc("/task", func(w http.ResponseWriter, r *http.Request) {
+		tuples := []taskTuple{}
+		var sql = `SELECT id, stream_id AS StreamID, status_id AS StatusID, name
+                 FROM task_tbl`
+		db.Select(&tuples, sql)
+		s, _ := json.Marshal(tuples)
+		fmt.Fprintf(w, "%s\n", s)
+
+	}).Methods("GET")
+
+	r.HandleFunc("/task/{id}", func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+
+		//Read POST body
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		//Parse POST body
+		decoder := json.NewDecoder(bytes.NewBuffer(body))
+		var p taskTuple
+		err = decoder.Decode(&p)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		//Write to DB
+		tx := db.MustBegin()
+		tx.MustExec("UPDATE task_tbl SET stream_id = $1, name = $2 WHERE id = $3", p.StreamID, p.Name, vars["id"])
+
+		tx.Commit()
+
+	}).Methods("POST")
+
+	r.HandleFunc("/task", func(w http.ResponseWriter, r *http.Request) {
+		//Read POST body
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		//Parse POST body
+		decoder := json.NewDecoder(bytes.NewBuffer(body))
+		var p taskTuple
+		err = decoder.Decode(&p)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		//Write to DB
+		tx := db.MustBegin()
+		var sql = "INSERT INTO task_tbl( id, stream_id, name ) VALUES ( NEXTVAL( 'task_seq' ), $1, $2 )"
+		tx.MustExec(sql, p.StreamID, p.Name)
+
+		var id idTuple
+		db.Get(&id, "SELECT CURRVAL( 'task_seq' ) AS id")
 		fmt.Fprintf(w, "%d", id.ID)
 
 		tx.Commit()
