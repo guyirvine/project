@@ -183,7 +183,7 @@
 	  ev.preventDefault();
 		var t = $( ev.target );
 		if ( t !== t1 ) {
-			console.log( t1 );
+//			console.log( t1 );
 			t1 = t;
 
 			t.addClass( 'droptarget' );
@@ -207,6 +207,41 @@
 
 	var t,d,item;
 
+	function updateExistingItem( ) {
+
+	}
+
+	function createNewItem( target ) {
+		var dropStreamId = Number(target[0].parentNode.id.substring( 6 ));
+		var stream = vm.board.streamIdx[dropStreamId];
+		var status = Status.TODO;
+
+		if ( target.hasClass( "Status.TODO" ) ) {
+			status = Status.TODO;
+		} else if ( target.hasClass( "Status.DOING" ) ) {
+			status = Status.DOING;
+		} else if ( target.hasClass( "Status.DONE" ) ) {
+			status = Status.DONE;
+		} else {
+			console.log( "Requested status does not exist: ", target.class );
+		}
+
+		var dto = {
+								ID: -1,
+								StreamID: dropStreamId,
+								StatusID: status.id,
+								Name: ''
+							}
+
+		console.log( JSON.stringify(dto) );
+
+		$.post( "task", JSON.stringify(dto), function(new_item_id) {
+			console.log( 'createNewItem. 10. new_item_id: ', new_item_id );
+			var item = new Item( Number(new_item_id), '', status.id, stream );
+			vm.board.addItem( stream, item );
+		});
+	}
+
 	function drop(ev) {
 	    ev.preventDefault();
 
@@ -215,19 +250,15 @@
 			t.removeClass( 'droptarget' );
 
 			d = document.getElementById(data);
-			console.log( d );
 			var id=d.id.substring(4);
 			if ( id === "new" ) {
-				var dropStreamId = t[0].parentNode.id.substring( 6 );
-				var stream = vm.board.streamIdx[dropStreamId];
-
-				var newId = 100;
-				item = new Item( newId, '', Status.TODO, stream );
-	      vm.board.addItem( stream, item );
-			} else {
-				item = vm.board.itemIdx[d.id.substring(4)];
+				createNewItem( t );
+				return;
 			}
 
+			console.log( 'drop.1. ', d );
+			item = vm.board.itemIdx[d.id.substring(4)];
+			console.log( 'drop.1. ', d.id.substring(4) );
 			if ( t.hasClass( "Status.TODO" ) ) {
 				item.setStatusToDo();
 			} else if ( t.hasClass( "Status.DOING" ) ) {
@@ -244,20 +275,33 @@
 				console.log( "Move", item.stream.id, dropStreamId );
 			}
 
-
-//			var stream = t[0].parent();
-//			console.log( stream.id );
+			console.log( JSON.stringify(item.getDTO()) );
+			$.post( "task/" + item.id, JSON.stringify(item.getDTO()), function() {
+				console.log( "Update" );
+			});
 		}
 
 		function updateItemText( ev ) {
+			console.log( 'updateItemText.1. ', ev );
 			item = vm.board.itemIdx[ev.target.id.substring(4)];
 			item.l( ev.target.innerText );
+
+			console.log( item.getDTO(), item.id() );
+			console.log( item );
+			$.post( "task/" + item.id(), JSON.stringify(item.getDTO()), function() {
+				console.log( "Posted" );
+			});
 		}
 
 		function updateStreamText( ev ) {
 			var stream = vm.board.streamIdx[ev.target.id.substring(6)];
 			stream.l( ev.target.innerText );
+
+			$.post( "stream/" + stream.id, JSON.stringify(stream.getDTO()), function() {
+				console.log( "Posted" );
+			});
 		}
+
 	</script>
 	<body>
     <div data-bind="with: board">
@@ -274,13 +318,13 @@
           <tr data-bind="attr: { id: 'stream' + id }, allowDrop: allowDrop" class="stream">
             <td><h2 onblur="updateStreamText(event)" contenteditable="true" data-bind="text: l,attr: { id: 'stream' + id }" class="stream">Stream</h2></td>
             <td data-bind="foreach: todo" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" class='Status.TODO'>
-              <div class='item' onblur="updateItemText(event)" contenteditable="true" draggable="true" ondragstart="drag(event)" data-bind="attr: { id: 'item' + id },css: { currentItem: isCurrentItem }, text: l, click: click">Item 1.1</div>
+              <div class='item' onblur="updateItemText(event)" contenteditable="true" draggable="true" ondragstart="drag(event)" data-bind="attr: { id: 'item' + id() },css: { currentItem: isCurrentItem }, text: l, click: click">Item 1.1</div>
             </td>
             <td data-bind="foreach: doing" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" class='Status.DOING'>
-              <div class='item' onblur="updateItemText(event)" contenteditable="true" draggable="true" ondragstart="drag(event)" data-bind="attr: { id: 'item' + id },css: { currentItem: isCurrentItem }, text: l, click: click">Item 1.1</div>
+              <div class='item' onblur="updateItemText(event)" contenteditable="true" draggable="true" ondragstart="drag(event)" data-bind="attr: { id: 'item' + id() },css: { currentItem: isCurrentItem }, text: l, click: click">Item 1.1</div>
             </td>
             <td data-bind="foreach: done" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" class='Status.DONE'>
-              <div class='item' onblur="updateItemText(event)" contenteditable="true" draggable="true" ondragstart="drag(event)" data-bind="attr: { id: 'item' + id },css: { currentItem: isCurrentItem }, text: l, click: click">Item 1.1</div>
+              <div class='item' onblur="updateItemText(event)" contenteditable="true" draggable="true" ondragstart="drag(event)" data-bind="attr: { id: 'item' + id() },css: { currentItem: isCurrentItem }, text: l, click: click">Item 1.1</div>
             </td>
           </tr>
         </tbody>
@@ -327,10 +371,19 @@
 
       function Item( id, l, s, stream ) {
         var self = this;
-				self.id = id;
+				self.id = ko.observable(id);
         self.l = ko.observable( l );
         self.s = ko.observable( Status.idx[s] );
 				self.stream = stream;
+
+				self.getDTO = function() {
+					return {
+						ID: Number(self.id()),
+						StreamID: self.stream.id,
+						StatusID: self.s().id,
+						Name: self.l()
+					}
+				}
 
         self.click = function() {
           vm.board.currentItem( self );
@@ -376,6 +429,13 @@
           });
         });
 
+				self.getDTO = function() {
+					return {
+						ID: self.id,
+						Name: self.l()
+					}
+				}
+
         self.addItem = function( i ) {
           self.items.push( i );
 					i.stream = self;
@@ -397,6 +457,12 @@
 
         self.currentItem = ko.observable();
 
+				self.setItemId = function(item, new_id) {
+					delete self.itemIdx[item.id()];
+					self.itemIdx[new_id] = item;
+					item.id(new_id);
+				}
+
         self.doingCount = ko.computed( function() {
           return _.reduce( self.streams(), function( total, el ) {
             return total + el.doing().length }, 0 );
@@ -408,7 +474,7 @@
 				}
 				self.addItem = function( s, i ) {
 					self.streamIdx[s.id].addItem( i );
-					self.itemIdx[i.id] = i;
+					self.itemIdx[i.id()] = i;
         }
 				self.moveStream = function( item, dropStreamId ) {
 					item.stream.removeItem( item );
@@ -438,6 +504,10 @@
       ko.applyBindings( vm );
 
 			var b = vm.board;
+
+			$( document ).ajaxError( function( a, b, c ) {
+				console.log( a, b, c );
+			});
 
 			$.getJSON( "stream", function( stream_list ) {
 				_.each( stream_list, function(stream) {

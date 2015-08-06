@@ -415,27 +415,34 @@ func main() {
 	r.HandleFunc("/stream/{id}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 
+		fmt.Println("stream.1")
 		//Read POST body
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
+			fmt.Println("stream.1.1. %s", err.Error() )
 			return
 		}
 
+		fmt.Println("stream.2. ")
 		//Parse POST body
 		decoder := json.NewDecoder(bytes.NewBuffer(body))
 		var p streamTuple
 		err = decoder.Decode(&p)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
+			fmt.Println("stream.1.2.1. %s", body )
+			fmt.Println("stream.1.2.2. %s", err.Error() )
 			return
 		}
 
 		//Write to DB
+		fmt.Println("stream.3")
 		tx := db.MustBegin()
 		tx.MustExec("UPDATE stream_tbl SET name = $1 WHERE id = $2", p.Name, vars["id"])
 
 		tx.Commit()
+		fmt.Println("stream.4")
 
 	}).Methods("POST")
 
@@ -483,6 +490,7 @@ func main() {
 	r.HandleFunc("/task/{id}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 
+		fmt.Println("task.1.")
 		//Read POST body
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -490,6 +498,7 @@ func main() {
 			return
 		}
 
+		fmt.Println("task.2., %s", body )
 		//Parse POST body
 		decoder := json.NewDecoder(bytes.NewBuffer(body))
 		var p taskTuple
@@ -501,13 +510,15 @@ func main() {
 
 		//Write to DB
 		tx := db.MustBegin()
-		tx.MustExec("UPDATE task_tbl SET stream_id = $1, name = $2 WHERE id = $3", p.StreamID, p.Name, vars["id"])
+		tx.MustExec("UPDATE task_tbl SET stream_id = $1, status_id = $2, name = $3 WHERE id = $4", p.StreamID, p.StatusID, p.Name, vars["id"])
 
 		tx.Commit()
 
 	}).Methods("POST")
 
 	r.HandleFunc("/task", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("task.1." )
+
 		//Read POST body
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -515,22 +526,27 @@ func main() {
 			return
 		}
 
+		fmt.Println("task.2., %s", body )
 		//Parse POST body
 		decoder := json.NewDecoder(bytes.NewBuffer(body))
 		var p taskTuple
 		err = decoder.Decode(&p)
 		if err != nil {
+			fmt.Println("task.1.2.1. %s", body )
+			fmt.Println("task.1.2.2. %s", err.Error() )
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
+		fmt.Println("task.3." )
 		//Write to DB
 		tx := db.MustBegin()
-		var sql = "INSERT INTO task_tbl( id, stream_id, name ) VALUES ( NEXTVAL( 'task_seq' ), $1, $2 )"
-		tx.MustExec(sql, p.StreamID, p.Name)
+		var sql = "INSERT INTO task_tbl( id, stream_id, status_id, name ) VALUES ( NEXTVAL( 'task_seq' ), $1, $2, $3 )"
+		tx.MustExec(sql, p.StreamID, p.StatusID, p.Name)
 
 		var id idTuple
-		db.Get(&id, "SELECT CURRVAL( 'task_seq' ) AS id")
+		tx.Get(&id, "SELECT CURRVAL( 'task_seq' ) AS id")
+		fmt.Println("task.4. new id: %d", id.ID )
 		fmt.Fprintf(w, "%d", id.ID)
 
 		tx.Commit()
