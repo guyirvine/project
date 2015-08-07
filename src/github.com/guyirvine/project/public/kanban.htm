@@ -101,13 +101,16 @@
     div.currentItemPanel {
       position: fixed;
       bottom: 1em;
-      left: 1em;
-      height: 12em;
       padding: 6px 9px;
-      min-width: 25em;
+      width: 24em;
+			height: 10em;
       border: none;
-      margin: 3px;
+			top: 50%;
+			left: 50%;
+			margin-top: -7em;
+			margin-left: -12em;
       box-shadow: 3px 2px 5px #888888;
+			border: 3px solid white;
     }
 
     div.currentItemPanel div.status span {
@@ -131,6 +134,13 @@
     div.currentItemPanel h2 {
       font-family: chalkduster;
     }
+
+		div.currentItemPanel input, div.currentItemPanel textarea {
+			font-family: chalkduster;
+			background-color: transparent;
+			width: 21em;
+			height: 8em;
+		}
 
     div.currentItemPanel ul {
       position: absolute;
@@ -175,6 +185,12 @@
 
 		div.newitem {
 			font-size: 0.8em;
+		}
+
+		div.currentItemPanel a.close {
+			position: absolute;
+			top: 0.3em;
+			right: 0.7em;
 		}
 	</style>
 	<script>
@@ -293,6 +309,15 @@
 			});
 		}
 
+		function updateItemTextFromTextArea() {
+			item = vm.board.currentItem();
+
+			$.post( "task/" + item.id(), JSON.stringify(item.getDTO()), function() {
+				console.log( "Posted" );
+			});
+		}
+
+
 		function updateStreamText( ev ) {
 			var stream = vm.board.streamIdx[ev.target.id.substring(6)];
 			stream.l( ev.target.innerText );
@@ -318,13 +343,13 @@
           <tr data-bind="attr: { id: 'stream' + id }, allowDrop: allowDrop" class="stream">
             <td><h2 onblur="updateStreamText(event)" contenteditable="true" data-bind="text: l,attr: { id: 'stream' + id }" class="stream">Stream</h2></td>
             <td data-bind="foreach: todo" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" class='Status.TODO'>
-              <div class='item' onblur="updateItemText(event)" contenteditable="true" draggable="true" ondragstart="drag(event)" data-bind="attr: { id: 'item' + id() },css: { currentItem: isCurrentItem }, text: l, click: click">Item 1.1</div>
+              <div class='item' onblur="updateItemText(event)" draggable="true" ondragstart="drag(event)" data-bind="attr: { id: 'item' + id() },css: { currentItem: isCurrentItem }, text: l, click: click">Item 1.1</div>
             </td>
             <td data-bind="foreach: doing" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" class='Status.DOING'>
-              <div class='item' onblur="updateItemText(event)" contenteditable="true" draggable="true" ondragstart="drag(event)" data-bind="attr: { id: 'item' + id() },css: { currentItem: isCurrentItem }, text: l, click: click">Item 1.1</div>
+              <div class='item' onblur="updateItemText(event)" draggable="true" ondragstart="drag(event)" data-bind="attr: { id: 'item' + id() },css: { currentItem: isCurrentItem }, text: l, click: click">Item 1.1</div>
             </td>
             <td data-bind="foreach: done" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" class='Status.DONE'>
-              <div class='item' onblur="updateItemText(event)" contenteditable="true" draggable="true" ondragstart="drag(event)" data-bind="attr: { id: 'item' + id() },css: { currentItem: isCurrentItem }, text: l, click: click">Item 1.1</div>
+              <div class='item' onblur="updateItemText(event)" draggable="true" ondragstart="drag(event)" data-bind="attr: { id: 'item' + id() },css: { currentItem: isCurrentItem }, text: l, click: click">Item 1.1</div>
             </td>
           </tr>
         </tbody>
@@ -335,9 +360,9 @@
 				</tfoot>
       </table>
 
-      <div class="currentItemPanel item-yellow hide" data-bind="with: currentItem">
-        <h2 data-bind="text: l"></h2>
-
+      <div class="currentItemPanel item-yellow hide" data-bind="with: currentItem, valueUpdate: valueUpdate">
+        <textarea data-bind="value: l"></textarea>
+				<!--
         <ul class='action'>
           <li data-bind="css: { hide: s() !== Status.TODO }"><a href='doing' data-bind="click: setStatusDoing">Move to Doing</a></li>
 
@@ -346,7 +371,9 @@
 
           <li data-bind="css: { hide: s() !== Status.DONE }"><a href='doing' data-bind="click: setStatusDoing">Move Back to Doing</a></li>
         </ul>
+			-->
 
+        <a data-bind='click: closeEditPanel' class="action close">close</a>
         <div class='note'>
           <div class="status" data-bind="with: s">Current Status is <span data-bind="text: name">Status Name</span></div>
         </div>
@@ -387,6 +414,8 @@
 
         self.click = function() {
           vm.board.currentItem( self );
+					$( ".currentItemPanel" ).removeClass( "hide" );
+					$( ".currentItemPanel textarea" ).focus();
         }
 
         self.setStatus = function( s ) {
@@ -402,6 +431,10 @@
           self.setStatus( Status.DONE );
         }
 
+				self.closeEditPanel = function() {
+					$( ".currentItemPanel" ).addClass( "hide" );
+					updateItemTextFromTextArea();
+				}
         self.isCurrentItem = ko.computed( function() { return self == vm.board.currentItem() })
       }
 
@@ -507,6 +540,13 @@
 
 			$( document ).ajaxError( function( a, b, c ) {
 				console.log( a, b, c );
+			});
+			$( document ).keyup( function(e) {
+				if ( e.keyCode === 27 ) {
+					if ( vm.board.currentItem() ) {
+						vm.board.currentItem().closeEditPanel();
+					}
+				}
 			});
 
 			$.getJSON( "stream", function( stream_list ) {
