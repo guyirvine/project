@@ -276,7 +276,7 @@
 			}
 
 			console.log( JSON.stringify(item.getDTO()) );
-			$.post( "task/" + item.id, JSON.stringify(item.getDTO()), function() {
+			$.post( "task/" + item.id(), JSON.stringify(item.getDTO()), function() {
 				console.log( "Update" );
 			});
 		}
