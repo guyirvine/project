@@ -192,6 +192,12 @@
 			top: 0.3em;
 			right: 0.7em;
 		}
+
+		div.currentItemPanel a.delete {
+			position: absolute;
+			top: 1.8em;
+			right: 0.7em;
+		}
 	</style>
 	<script>
 	var t1,t2;
@@ -317,7 +323,6 @@
 			});
 		}
 
-
 		function updateStreamText( ev ) {
 			var stream = vm.board.streamIdx[ev.target.id.substring(6)];
 			stream.l( ev.target.innerText );
@@ -374,6 +379,7 @@
 			-->
 
         <a data-bind='click: closeEditPanel' class="action close">close</a>
+				<a data-bind='click: delete2' class="action delete">delete</a>
         <div class='note'>
           <div class="status" data-bind="with: s">Current Status is <span data-bind="text: name">Status Name</span></div>
         </div>
@@ -436,6 +442,13 @@
 					updateItemTextFromTextArea();
 				}
         self.isCurrentItem = ko.computed( function() { return self == vm.board.currentItem() })
+
+				self.delete2 = function() {
+					console.log( 'delete2' );
+					vm.board.deleteItem( self );
+					$( ".currentItemPanel" ).addClass( "hide" );
+					console.log( 'delete2. 2' );
+				}
       }
 
       function Stream( id, l ) {
@@ -490,10 +503,8 @@
 
         self.currentItem = ko.observable();
 
-				self.setItemId = function(item, new_id) {
+				self.deleteItem = function(item) {
 					delete self.itemIdx[item.id()];
-					self.itemIdx[new_id] = item;
-					item.id(new_id);
 				}
 
         self.doingCount = ko.computed( function() {
